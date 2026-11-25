@@ -1,0 +1,2829 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Concept demo of SENSE, a sensory-awareness wristband with a companion app. All readings are simulated.">
+<meta property="og:title" content="SENSE Wristband Demo">
+<meta property="og:description" content="Concept demo of SENSE, a sensory-awareness wristband with a companion app. All readings are simulated.">
+<meta name="theme-color" content="#f1f8f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a2526" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2324c0b4'/%3E%3Crect x='10' y='10' width='12' height='12' rx='3.2' fill='none' stroke='%2305292b' stroke-width='2.4'/%3E%3Cpath d='M12.6 10V5.5h6.8V10M12.6 22v4.5h6.8V22' fill='none' stroke='%2305292b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>:root{color-scheme:light;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>SENSE Wristband Demo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Lexend:wght@300..700&family=Unbounded:wght@400..700&display=swap">
+<style>
+/* Layout: a workbench for the wristband on the left and the companion app in a phone on the right.
+   On a phone the app is the whole page. Turquoise carries the product; a warm coral marks "outside your range". */
+:root {
+  --bg: #e6f2f0;
+  --app-bg: #f1f8f7;
+  --surface: #ffffff;
+  --surface-2: #e9f4f2;
+  --ink: #0b2a2d;
+  --ink-2: #375a5c;
+  --ink-3: #516f6f;
+  --line: #d3e5e2;
+  --line-strong: #b3d0cc;
+  --teal: #24c0b4;
+  --teal-mark: #0b8f87;
+  --teal-ink: #08756f;
+  --teal-soft: #d2efeb;
+  --on-teal: #05292b;
+  --hero-bg: linear-gradient(140deg, #3bd6c9 0%, #1cb7ac 100%);
+  --hero-ink: #05292b;
+  --warm: #db6240;
+  --warm-ink: #a84426;
+  --warm-soft: #fbe6de;
+  --bezel: #0d2a2d;
+  --sheet-bg: #f7fcfb;
+  --glow: rgba(36, 192, 180, .22);
+  --dot: rgba(11, 60, 62, .14);
+  --scrim: rgba(8, 38, 40, .46);
+  --shadow: 0 1px 2px rgba(11, 60, 62, .06), 0 10px 26px rgba(11, 60, 62, .09);
+  --shadow-lift: 0 30px 70px rgba(8, 50, 52, .26);
+  --font-ui: "Lexend", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Unbounded", "Lexend", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --gl: max(16px, env(safe-area-inset-left, 0px));
+  --gr: max(16px, env(safe-area-inset-right, 0px));
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #071d1e;
+    --app-bg: #0a2526;
+    --surface: #103134;
+    --surface-2: #0c2a2c;
+    --ink: #e6f6f4;
+    --ink-2: #abcdca;
+    --ink-3: #83a8a5;
+    --line: #1b4346;
+    --line-strong: #2c5d61;
+    --teal: #2ed1c3;
+    --teal-mark: #22aa9f;
+    --teal-ink: #66e2d7;
+    --teal-soft: #123f42;
+    --on-teal: #04282a;
+    --hero-bg: linear-gradient(140deg, #16726b 0%, #0e5450 100%);
+    --hero-ink: #eafaf8;
+    --warm: #df6c4b;
+    --warm-ink: #f8ab94;
+    --warm-soft: #42251e;
+    --bezel: #020c0d;
+    --sheet-bg: #0b2829;
+    --glow: rgba(46, 209, 195, .16);
+    --dot: rgba(190, 240, 235, .08);
+    --scrim: rgba(0, 10, 11, .62);
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 26px rgba(0, 0, 0, .28);
+    --shadow-lift: 0 30px 70px rgba(0, 0, 0, .55);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #071d1e;
+  --app-bg: #0a2526;
+  --surface: #103134;
+  --surface-2: #0c2a2c;
+  --ink: #e6f6f4;
+  --ink-2: #abcdca;
+  --ink-3: #83a8a5;
+  --line: #1b4346;
+  --line-strong: #2c5d61;
+  --teal: #2ed1c3;
+  --teal-mark: #22aa9f;
+  --teal-ink: #66e2d7;
+  --teal-soft: #123f42;
+  --on-teal: #04282a;
+  --hero-bg: linear-gradient(140deg, #16726b 0%, #0e5450 100%);
+  --hero-ink: #eafaf8;
+  --warm: #df6c4b;
+  --warm-ink: #f8ab94;
+  --warm-soft: #42251e;
+  --bezel: #020c0d;
+  --sheet-bg: #0b2829;
+  --glow: rgba(46, 209, 195, .16);
+  --dot: rgba(190, 240, 235, .08);
+  --scrim: rgba(0, 10, 11, .62);
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 26px rgba(0, 0, 0, .28);
+  --shadow-lift: 0 30px 70px rgba(0, 0, 0, .55);
+  color-scheme: dark;
+}
+
+/* ---------- base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 15px/1.45 var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 10;
+  background: var(--app-bg);
+}
+h1, h2, h3, p, ul, ol, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; cursor: pointer; text-align: inherit; }
+:focus-visible { outline: 2px solid var(--teal-ink); outline-offset: 2px; }
+b { font-weight: 600; }
+
+.ic { display: inline-grid; place-items: center; width: 20px; height: 20px; flex: none; }
+.ic svg { width: 100%; height: 100%; display: block; }
+.eyebrow { font: 500 11px/1.3 var(--font-mono); letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); }
+.unit { font: 500 12px/1 var(--font-mono); letter-spacing: .02em; color: var(--ink-3); }
+.wordmark { font: 700 17px/1 var(--font-display); letter-spacing: .16em; color: var(--ink); }
+.tagchip {
+  display: inline-block; margin-left: 6px; padding: 2px 7px; border-radius: 999px;
+  border: 1px solid var(--line-strong); color: var(--ink-2);
+  font: 500 10px/1.3 var(--font-mono); letter-spacing: .07em; text-transform: uppercase; vertical-align: 1px;
+}
+
+/* ---------- shell: app only by default ---------- */
+.shell { height: 100%; }
+.top, .stage { display: none; }
+.phone { height: 100%; }
+.app {
+  position: relative; isolation: isolate;
+  height: 100%; max-width: 640px; margin-inline: auto;
+  display: flex; flex-direction: column;
+  background: var(--app-bg);
+  overflow: hidden;
+}
+.app > * { flex: none; }
+.statusbar { display: none; }
+
+/* ---------- desktop: workbench + phone ---------- */
+@media (min-width: 1100px) and (min-height: 600px) {
+  body::before { background: var(--bg); }
+  .shell {
+    display: grid;
+    grid-template: "top top" auto "stage phone" minmax(0, 1fr) / minmax(0, 1fr) 414px;
+    column-gap: 28px;
+    max-width: 1500px; margin-inline: auto;
+    padding-block: 12px 18px;
+    padding-left: max(24px, env(safe-area-inset-left, 0px));
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
+  }
+  .top { grid-area: top; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 2px 12px; }
+  .stage {
+    grid-area: stage; min-width: 0; min-height: 0;
+    display: grid; grid-template-rows: minmax(280px, 1fr) auto auto; gap: 14px;
+    overflow-y: auto; scrollbar-width: thin;
+  }
+  .phone {
+    grid-area: phone; align-self: center;
+    width: 414px; height: min(100%, 836px);
+    padding: 11px; border-radius: 54px;
+    background: var(--bezel);
+    box-shadow: var(--shadow-lift), inset 0 0 0 1.5px rgba(255, 255, 255, .09);
+  }
+  .app { max-width: none; border-radius: 43px; }
+  .statusbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 28px 0; font: 600 13px/1 var(--font-ui); color: var(--ink);
+  }
+}
+.brand { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 14px; min-width: 0; }
+.tagline { color: var(--ink-2); font-size: 14px; }
+.top-side { display: flex; align-items: center; gap: 10px; flex: none; }
+.demo-pill {
+  font: 500 11px/1 var(--font-mono); letter-spacing: .07em; text-transform: uppercase;
+  padding: 7px 11px; border-radius: 999px; border: 1px solid var(--line-strong); color: var(--ink-2);
+}
+.btn-quiet { font-weight: 500; font-size: 14px; color: var(--teal-ink); padding: 8px 10px; border-radius: 9px; }
+.btn-quiet:hover { background: var(--teal-soft); }
+.sb-island { width: 88px; height: 25px; border-radius: 14px; background: var(--bezel); }
+.sb-icons { display: inline-flex; align-items: center; gap: 5px; }
+.sb-icons .ic { width: 15px; height: 15px; }
+#sbClock, .sb-icons { width: 64px; }
+.sb-icons { justify-content: flex-end; }
+
+/* ---------- workbench ---------- */
+.bench {
+  display: grid; grid-template-columns: minmax(0, 1fr) 286px; min-height: 0;
+  border: 1px solid var(--line); border-radius: 22px; overflow: hidden; background: var(--surface);
+}
+.slot-band { min-height: 0; height: 100%; }
+.legend { display: grid; grid-template-rows: auto minmax(0, 1fr); min-height: 0; border-left: 1px solid var(--line); }
+.legend-head { padding: 16px 18px 8px; }
+.legend-list { overflow-y: auto; padding: 0 18px 8px; scrollbar-width: thin; }
+.legend .footnote { padding: 0 0 10px; }
+@media (max-width: 1259px) {
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .legend { display: none; }
+}
+
+.bandview {
+  position: relative; height: 310px; overflow: hidden;
+  border: 1px solid var(--line); border-radius: 20px;
+  background:
+    radial-gradient(58% 62% at 50% 56%, var(--glow) 0%, transparent 72%),
+    radial-gradient(circle at 1px 1px, var(--dot) 1px, transparent 1.6px) 0 0 / 22px 22px,
+    var(--sheet-bg);
+  user-select: none; -webkit-user-select: none;
+}
+.slot-band .bandview { height: 100%; border: 0; border-radius: 0; }
+.bandview canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: grab; touch-action: pan-y; outline: none; }
+.bandview.is-drag canvas { cursor: grabbing; }
+.leaders { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.leaders line { stroke: var(--ink-3); stroke-width: 1; }
+.leaders circle { fill: var(--ink-2); }
+.pins { position: absolute; inset: 0; pointer-events: none; }
+.pin {
+  position: absolute; left: 0; top: 0; pointer-events: auto;
+  width: 28px; height: 28px; margin: -14px 0 0 -14px; border-radius: 50%;
+  display: grid; place-items: center;
+  font: 500 12px/1 var(--font-mono);
+  background: var(--surface); color: var(--ink); border: 1.5px solid var(--ink-2);
+  will-change: transform, opacity;
+}
+.pin::after { content: ""; position: absolute; inset: -9px; border-radius: 50%; }
+.pin:hover { border-color: var(--teal-mark); }
+.pin.is-on { background: var(--teal); border-color: var(--teal); color: var(--on-teal); }
+.band-title { position: absolute; left: 20px; top: 16px; pointer-events: none; display: none; transition: opacity .25s; }
+.bandview.is-focus .band-title { opacity: 0; }
+.slot-band .band-title { display: block; }
+.bench-title { font: 500 17px/1.25 var(--font-display); margin-top: 4px; }
+.band-ctl { position: absolute; right: 12px; top: 12px; }
+.band-hint {
+  position: absolute; left: 14px; bottom: 11px; pointer-events: none;
+  font: 500 10.5px/1 var(--font-mono); letter-spacing: .07em; text-transform: uppercase; color: var(--ink-3);
+}
+.ripples { position: absolute; inset: 0; pointer-events: none; }
+.ripple {
+  position: absolute; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%;
+  border: 2px solid var(--teal-mark); opacity: 0;
+  animation: ripple 1s ease-out forwards;
+}
+@keyframes ripple { from { transform: scale(.5); opacity: .75; } to { transform: scale(2.2); opacity: 0; } }
+.bandview.no-3d canvas, .bandview.no-3d .band-ctl, .bandview.no-3d .band-hint, .bandview.no-3d .pins, .bandview.no-3d .leaders { display: none; }
+.band-fallback { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 4px; padding: 20px; text-align: center; color: var(--ink-2); font-size: 14px; }
+.iso { position: relative; width: 170px; height: 98px; margin: 46px 0 34px; transform: rotateX(58deg) rotateZ(-34deg); transform-style: preserve-3d; }
+.iso i { position: absolute; inset: 0; border-radius: 30px; border: 1px solid var(--line-strong); background: var(--surface); transform: translateZ(calc(var(--i) * 30px)); }
+.iso i:nth-child(1) { background: var(--bezel); }
+.iso i:nth-child(2) { inset: 12px 60px 12px 14px; border-radius: 10px; background: var(--line-strong); }
+.iso i:nth-child(3) { background: var(--teal-mark); }
+.iso i:nth-child(4) { background: var(--bezel); }
+
+.seg { display: inline-flex; padding: 3px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); }
+.seg button { min-height: 34px; padding: 0 14px; border-radius: 999px; font-size: 13px; font-weight: 500; color: var(--ink-2); white-space: nowrap; }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(8, 50, 52, .18); }
+.seg.sm button { min-height: 32px; padding: 0 11px; }
+
+/* ---------- how it works ---------- */
+.journey { display: grid; gap: 8px; }
+.journey-steps { display: grid; gap: 8px; }
+.jstep {
+  position: relative; display: grid; grid-template-columns: 26px minmax(0, 1fr); column-gap: 10px; align-items: baseline;
+  padding: 10px 12px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface);
+  transition: background-color .25s, border-color .25s, color .25s;
+}
+.jn { font: 500 11px/1.3 var(--font-mono); color: var(--ink-3); }
+.jl { font-weight: 600; font-size: 14px; line-height: 1.3; }
+.jc { grid-column: 2; font-size: 12.5px; line-height: 1.35; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.jstep.is-on { background: var(--teal); border-color: var(--teal); color: var(--on-teal); }
+.jstep.is-on .jn, .jstep.is-on .jc { color: var(--on-teal); }
+.jstep.is-done { background: var(--teal-soft); border-color: var(--teal-soft); }
+.stage .journey { grid-template-columns: minmax(0, 1fr); }
+.stage .journey > .eyebrow { display: none; }
+.stage .journey-steps { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.stage .jstep { grid-template-columns: minmax(0, 1fr); row-gap: 2px; align-content: start; min-height: 78px; }
+.stage .jc { grid-column: 1; }
+
+/* ---------- the simulated room ---------- */
+.room { display: grid; gap: 10px; padding: 12px 14px 14px; border-radius: 18px; border: 1px dashed var(--line-strong); background: var(--surface-2); }
+.room-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; min-height: 28px; }
+.room-head-side { display: flex; align-items: center; gap: 6px; }
+.places { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin-inline: -14px; padding: 2px 14px; }
+.places::-webkit-scrollbar { display: none; }
+.place {
+  flex: none; display: inline-flex; align-items: center; gap: 7px;
+  min-height: 38px; padding: 0 13px 0 10px; border-radius: 999px;
+  border: 1px solid var(--line-strong); background: var(--surface);
+  font-size: 13.5px; font-weight: 500; color: var(--ink-2); white-space: nowrap;
+}
+.place .ic { width: 18px; height: 18px; }
+.place:hover { border-color: var(--ink-3); }
+.place[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--app-bg); }
+.room-note { font-size: 13px; color: var(--ink-2); }
+.room-fine { display: grid; gap: 10px 18px; }
+.app .room:not(.is-open) .room-fine { display: none; }
+.stage .room { padding: 14px 16px 16px; }
+.stage .places { flex-wrap: wrap; overflow: visible; margin-inline: 0; padding: 0; }
+.stage .room-fine { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.stage #roomMore, .stage #burstBtn2, .app #burstBtn { display: none; }
+#burstBtn2 { justify-self: start; }
+.knob { display: grid; gap: 0; min-width: 0; }
+.knob-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--ink-2); }
+.knob-top output { font: 500 12.5px/1 var(--font-mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+
+.slider { position: relative; height: 36px; padding: 0 13px; touch-action: pan-y; cursor: pointer; user-select: none; -webkit-user-select: none; }
+.slider-track { position: relative; top: 15px; height: 6px; border-radius: 3px; background: var(--line-strong); }
+.slider-fill { position: absolute; top: 0; bottom: 0; border-radius: 3px; background: var(--teal-mark); }
+.slider-thumb {
+  position: absolute; top: 50%; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%;
+  background: var(--surface); border: 2px solid var(--teal-mark); box-shadow: 0 1px 4px rgba(8, 50, 52, .25);
+}
+.slider-thumb:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+.room .slider-fill { background: var(--ink-3); }
+.room .slider-thumb { border-color: var(--ink-2); }
+.is-off .slider { opacity: .45; pointer-events: none; }
+
+/* ---------- the app ---------- */
+.app-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding-block: 12px 8px; padding-left: var(--gl); padding-right: var(--gr);
+}
+.app-head-side { display: flex; align-items: center; gap: 6px; }
+.bandchip {
+  display: inline-flex; align-items: center; gap: 7px; min-height: 34px; padding: 0 12px 0 10px;
+  border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface);
+  font-size: 12.5px; font-weight: 500; color: var(--ink-2); font-variant-numeric: tabular-nums;
+}
+.bandchip i { width: 8px; height: 8px; border-radius: 50%; background: var(--teal-mark); }
+.iconbtn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: var(--ink-2); }
+.iconbtn:hover { background: var(--teal-soft); color: var(--teal-ink); }
+.app > .views { flex: 1 1 0; }
+.views { min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+.view { display: grid; gap: 14px; align-content: start; padding-block: 4px 24px; padding-left: var(--gl); padding-right: var(--gr); }
+.view > * { min-width: 0; }
+.view-head { display: grid; gap: 4px; }
+.view-title { font: 500 20px/1.25 var(--font-display); text-wrap: balance; }
+.view-lede { color: var(--ink-2); font-size: 14px; }
+
+.tabs {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px;
+  padding-block: 6px 8px; padding-left: var(--gl); padding-right: var(--gr);
+  background: var(--surface); border-top: 1px solid var(--line);
+}
+.tab { display: grid; justify-items: center; gap: 2px; min-height: 50px; padding: 5px 4px 3px; border-radius: 12px; font-size: 11.5px; font-weight: 500; color: var(--ink-3); }
+.tab .ic { width: 46px; height: 26px; padding: 3px 0; border-radius: 13px; }
+.tab .ic svg { width: 20px; height: 20px; }
+.tab[aria-current="page"] { color: var(--teal-ink); }
+.tab[aria-current="page"] .ic { background: var(--teal-soft); }
+
+/* now */
+.hero {
+  display: grid; gap: 6px; padding: 16px 18px 18px; border-radius: 20px;
+  background: var(--hero-bg); color: var(--hero-ink);
+}
+.hero[data-state="over"] { background: var(--warm-soft); color: var(--ink); }
+.hero[data-state="rest"] { background: var(--surface); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line-strong); }
+.hero-meta { font: 500 11.5px/1.3 var(--font-mono); letter-spacing: .05em; text-transform: uppercase; opacity: .9; }
+.hero-title { font: 500 22px/1.2 var(--font-ui); letter-spacing: -.005em; text-wrap: balance; }
+.hero-sub { font-size: 14px; line-height: 1.4; font-variant-numeric: tabular-nums; }
+.hero-bar { height: 4px; margin-top: 4px; border-radius: 2px; background: rgba(168, 68, 38, .22); overflow: hidden; }
+.hero-bar i { display: block; height: 100%; width: 0; border-radius: 2px; background: var(--warm); transition: width .5s linear; }
+.hero-act {
+  justify-self: start; margin-top: 6px; min-height: 38px; padding: 0 14px; border-radius: 12px;
+  font-weight: 600; font-size: 14px; background: var(--ink); color: var(--app-bg);
+}
+
+.cards { display: grid; gap: 10px; }
+.card { display: grid; gap: 8px; padding: 14px 16px 12px; border-radius: 18px; border: 1px solid var(--line); background: var(--surface); }
+.card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.card-name { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; font-size: 14px; color: var(--ink-2); }
+.state { display: inline-flex; align-items: center; gap: 4px; font-size: 12.5px; font-weight: 500; color: var(--teal-ink); white-space: nowrap; }
+.state .ic { width: 15px; height: 15px; }
+.state[data-s="over"] { color: var(--warm-ink); }
+.state[data-s="off"] { color: var(--ink-3); }
+.card-read { display: flex; align-items: baseline; gap: 6px; }
+.card-val { font: 400 34px/1 var(--font-ui); letter-spacing: -.015em; font-variant-numeric: tabular-nums; }
+.card-like { margin-left: auto; padding-left: 8px; font-size: 12.5px; line-height: 1.3; color: var(--ink-3); text-align: right; }
+.spark { position: relative; height: 46px; }
+.spark-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.spark-area { fill: var(--teal-mark); opacity: .11; stroke: none; }
+.spark-area.is-out { fill: var(--warm); opacity: .16; }
+.spark-line { fill: none; stroke: var(--teal-mark); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.spark-line.is-out { stroke: var(--warm); }
+.spark-limit { stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 4 3; vector-effect: non-scaling-stroke; }
+.spark-dot {
+  position: absolute; right: -5px; width: 10px; height: 10px; margin-top: -5px; border-radius: 50%;
+  background: var(--teal-mark); box-shadow: 0 0 0 2px var(--surface);
+}
+.spark-dot.is-out { background: var(--warm); }
+.spark-tag {
+  position: absolute; left: 0; padding: 0 5px 0 0; transform: translateY(-115%);
+  font: 500 10px/1.1 var(--font-mono); letter-spacing: .03em; color: var(--ink-3); background: var(--surface);
+  white-space: nowrap;
+}
+.spark-tag.is-below { transform: translateY(15%); }
+
+/* band */
+.band-status { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.bs-item { display: grid; gap: 1px; padding: 10px 12px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); }
+.bs-item span { font-size: 12px; color: var(--ink-3); }
+.bs-item b { font-weight: 500; font-size: 14.5px; }
+.group { display: grid; gap: 12px; padding-top: 16px; border-top: 1px solid var(--line); }
+.group-title { font: 500 11px/1.3 var(--font-mono); letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); }
+.parts { display: grid; }
+.part { border-bottom: 1px solid var(--line); }
+.part:last-child { border-bottom: 0; }
+.part-btn {
+  width: 100%; display: grid; grid-template-columns: 26px minmax(0, 1fr) auto 16px; align-items: center; gap: 10px;
+  min-height: 46px; padding: 8px 0;
+}
+.legend .part-btn { min-height: 34px; padding: 4px 0; }
+.part-n { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 500 12px/1 var(--font-mono); border: 1.5px solid var(--ink-2); }
+.part.is-on .part-n { background: var(--teal); border-color: var(--teal); color: var(--on-teal); }
+.part-name { font-weight: 500; font-size: 14.5px; }
+.legend .part-name { font-size: 14px; }
+.part-live { font: 500 12px/1 var(--font-mono); color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.part-chev { width: 16px; height: 16px; color: var(--ink-3); transition: transform .2s; }
+.part.is-on .part-chev { transform: rotate(90deg); }
+.part-text { padding: 0 4px 12px 36px; font-size: 13.5px; line-height: 1.45; color: var(--ink-2); display: grid; gap: 8px; justify-items: start; }
+.footnote { font-size: 12px; line-height: 1.4; color: var(--ink-3); }
+
+/* profile */
+.limit-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.limit-name { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15.5px; }
+.limit-body { display: grid; gap: 2px; }
+.limit-read { display: flex; align-items: baseline; gap: 6px; color: var(--ink-2); font-size: 14px; }
+.limit-read b { font: 400 26px/1.1 var(--font-ui); letter-spacing: -.01em; color: var(--ink); font-variant-numeric: tabular-nums; }
+.ticks { position: relative; height: 30px; margin: 0 13px; font: 400 10px/1.25 var(--font-mono); color: var(--ink-3); }
+.ticks span { position: absolute; top: 0; transform: translateX(-50%); text-align: center; white-space: nowrap; }
+.ticks span::before { content: ""; display: block; width: 1px; height: 5px; margin: 0 auto 2px; background: var(--line-strong); }
+.ticks span.is-first { transform: none; text-align: left; }
+.ticks span.is-first::before { margin-left: 0; }
+.ticks span.is-last { transform: translateX(-100%); text-align: right; }
+.ticks span.is-last::before { margin-right: 0; }
+.switch { position: relative; flex: none; width: 48px; height: 30px; border-radius: 15px; background: var(--line-strong); transition: background-color .2s; }
+.switch::before { content: ""; position: absolute; inset: -7px -4px; }
+.switch::after {
+  content: ""; position: absolute; left: 3px; top: 3px; width: 24px; height: 24px; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, .28); transition: transform .2s;
+}
+.switch[aria-checked="true"] { background: var(--teal-mark); }
+.switch[aria-checked="true"]::after { transform: translateX(18px); }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; }
+.row.col { flex-direction: column; align-items: stretch; gap: 8px; }
+.row.sub { justify-content: flex-start; flex-wrap: wrap; gap: 8px 10px; }
+.row-text { display: grid; gap: 1px; min-width: 0; }
+.row-text b { font-weight: 500; font-size: 15px; }
+.row-text span { font-size: 13px; color: var(--ink-2); }
+.check { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 12px; align-items: center; width: 100%; min-height: 44px; font-size: 15px; }
+.check .box { width: 24px; height: 24px; border-radius: 7px; border: 1.5px solid var(--ink-3); display: grid; place-items: center; color: transparent; }
+.check .box .ic { width: 16px; height: 16px; }
+.check[aria-checked="true"] .box { background: var(--teal-mark); border-color: var(--teal-mark); color: var(--surface); }
+.check[aria-disabled="true"] { cursor: default; }
+.check[aria-disabled="true"] .box { background: var(--ink-3); border-color: var(--ink-3); }
+.check small { display: block; font-size: 12.5px; color: var(--ink-2); }
+.facts { display: grid; gap: 10px; }
+.facts li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 10px; font-size: 14px; line-height: 1.4; color: var(--ink-2); }
+.facts li b { color: var(--ink); font-weight: 500; }
+.facts .ic { color: var(--teal-ink); margin-top: 1px; }
+
+/* today */
+.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.tile { display: grid; gap: 2px; align-content: start; padding: 12px 12px 10px; border-radius: 16px; border: 1px solid var(--line); background: var(--surface); }
+.tile b { font: 400 24px/1.15 var(--font-ui); letter-spacing: -.01em; }
+.tile span { font-size: 12px; line-height: 1.3; color: var(--ink-2); }
+.daybox { display: grid; gap: 8px; padding: 12px 14px 10px; border-radius: 18px; border: 1px solid var(--line); background: var(--surface); }
+.daybox > * { min-width: 0; }
+.day-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.day-read { display: grid; gap: 2px; min-width: 0; font-size: 12.5px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.day-read b { font: 500 15px/1.2 var(--font-ui); color: var(--ink); }
+.day-read .vals { display: flex; flex-wrap: wrap; gap: 2px 10px; font: 500 12px/1.4 var(--font-mono); color: var(--ink); }
+.day-chart { position: relative; touch-action: pan-y; cursor: crosshair; border-radius: 8px; }
+.day-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.day-seg { fill: var(--surface-2); }
+.day-segtext { fill: var(--ink-2); font: 500 10px var(--font-mono); letter-spacing: .02em; }
+.day-title { fill: var(--ink); font: 500 12px var(--font-ui); }
+.day-unit { fill: var(--ink-3); font: 400 10.5px var(--font-mono); }
+.day-grid { stroke: var(--line); stroke-width: 1; }
+.day-tick { fill: var(--ink-3); font: 400 10px var(--font-mono); }
+.day-limit { stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 4 3; }
+.day-limtext { fill: var(--ink-3); font: 500 9.5px var(--font-mono); paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.day-area { fill: var(--teal-mark); opacity: .11; }
+.day-area.is-out { fill: var(--warm); opacity: .17; }
+.day-line { fill: none; stroke: var(--teal-mark); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.day-line.is-out { stroke: var(--warm); }
+.day-mark { fill: var(--warm); stroke: var(--surface); stroke-width: 2; }
+.day-cross { stroke: var(--ink-2); stroke-width: 1; }
+.day-crossdot { fill: var(--ink); stroke: var(--surface); stroke-width: 2; }
+.day-table-wrap { overflow-x: auto; }
+.day-table { width: 100%; border-collapse: collapse; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.day-table th { text-align: left; padding: 6px 12px 6px 0; border-bottom: 1px solid var(--line-strong); font: 500 10px/1.3 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); white-space: nowrap; }
+.day-table td { padding: 8px 12px 8px 0; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.day-table tr:last-child td { border-bottom: 0; }
+.log { display: grid; }
+.log-item { display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.log-item:first-child { padding-top: 0; }
+.log-item:last-child { border-bottom: 0; }
+.log-time { padding-top: 2px; font: 500 12.5px/1.3 var(--font-mono); color: var(--ink-2); }
+.log-main { display: grid; gap: 4px; }
+.log-what { font-size: 14px; line-height: 1.35; }
+.log-what span { color: var(--ink-2); }
+.log-did { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 13px; color: var(--ink-2); }
+.chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px 2px 6px; border-radius: 999px; font-size: 11.5px; font-weight: 500; background: var(--surface-2); color: var(--ink-2); }
+.chip .ic { width: 13px; height: 13px; }
+.chip.good { background: var(--teal-soft); color: var(--teal-ink); }
+.chip.plain { padding-left: 9px; }
+
+/* ---------- sheet, buttons, toast ---------- */
+.sheet-layer { position: absolute; inset: 0; z-index: 30; display: grid; align-items: end; background: var(--scrim); animation: fade .2s ease-out; }
+.sheet {
+  display: grid; grid-template-rows: auto minmax(0, 1fr); max-height: 90%;
+  border-radius: 24px 24px 0 0; background: var(--surface);
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, .22);
+  animation: rise .3s cubic-bezier(.2, .8, .2, 1);
+}
+@keyframes fade { from { opacity: 0; } }
+@keyframes rise { from { transform: translateY(40%); opacity: .4; } }
+.sheet-head { position: relative; padding-block: 10px 0; padding-left: var(--gl); padding-right: var(--gr); }
+.grabber { width: 38px; height: 4px; margin: 0 auto 10px; border-radius: 2px; background: var(--line-strong); }
+.sheet-close { position: absolute; right: 10px; top: 12px; }
+.sheet-body { display: grid; gap: 14px; align-content: start; overflow-y: auto; padding-block: 2px 20px; padding-left: var(--gl); padding-right: var(--gr); }
+.sheet-body > * { min-width: 0; }
+.vibline { display: inline-flex; align-items: center; gap: 8px; padding-right: 40px; font: 500 11.5px/1.3 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--warm-ink); }
+.is-buzz > .ic { animation: buzz .16s linear 9; }
+@keyframes buzz { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-2px) rotate(-5deg); } 75% { transform: translateX(2px) rotate(5deg); } }
+.sheet-title { font: 500 21px/1.25 var(--font-ui); text-wrap: balance; padding-right: 36px; }
+.sheet-detail { color: var(--ink-2); font-size: 14.5px; font-variant-numeric: tabular-nums; }
+.sheet-text { color: var(--ink-2); font-size: 14.5px; line-height: 1.5; }
+.steps5 { display: flex; align-items: center; gap: 6px; font: 500 10.5px/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+.steps5 i { width: 16px; height: 4px; border-radius: 2px; background: var(--line-strong); }
+.steps5 i.is-on { background: var(--teal-mark); width: 26px; }
+.steps5 i.is-done { background: var(--teal-mark); opacity: .45; }
+.steps5 span { margin-left: 4px; }
+.opts { display: grid; gap: 8px; }
+.opt {
+  width: 100%; display: grid; grid-template-columns: 36px minmax(0, 1fr) 16px; align-items: center; gap: 12px;
+  min-height: 54px; padding: 8px 14px 8px 10px; border-radius: 16px;
+  border: 1px solid var(--line-strong); background: var(--surface); font-weight: 500; font-size: 15.5px;
+}
+.opt > .ic:first-child { width: 36px; height: 36px; padding: 8px; border-radius: 50%; background: var(--teal-soft); color: var(--teal-ink); }
+.opt > .ic:last-child { width: 16px; height: 16px; color: var(--ink-3); }
+.opt:hover { border-color: var(--teal-mark); }
+.opt.is-plain > .ic:first-child { background: var(--surface-2); color: var(--ink-2); }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 46px; padding: 0 18px; border-radius: 14px;
+  font-weight: 600; font-size: 15px; background: var(--teal); color: var(--on-teal);
+}
+.btn:hover { filter: brightness(1.04); }
+.btn.alt { background: var(--surface); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line-strong); }
+.btn.sm { min-height: 36px; padding: 0 13px; border-radius: 11px; font-size: 13.5px; font-weight: 500; }
+.btn.sm .ic { width: 17px; height: 17px; }
+.btn.wide { width: 100%; }
+.btn-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.linkbtn { justify-self: start; min-height: 40px; padding: 0 2px; font-weight: 500; font-size: 14.5px; color: var(--teal-ink); }
+.linkbtn.sm { min-height: 28px; font-size: 13px; }
+.linkbtn.mid { justify-self: center; }
+.done-line { display: flex; align-items: center; gap: 8px; font-weight: 500; color: var(--teal-ink); }
+.toast {
+  position: absolute; left: 50%; bottom: 82px; z-index: 40; transform: translateX(-50%);
+  max-width: calc(100% - 32px); padding: 10px 14px; border-radius: 12px;
+  background: var(--ink); color: var(--app-bg); font-size: 13.5px; line-height: 1.35; text-align: center;
+  box-shadow: var(--shadow); animation: fade .2s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+</style>
+</head>
+<body>
+<div class="shell" id="shell">
+
+  <header class="top">
+    <div class="brand">
+      <span class="wordmark">SENSE</span>
+      <span class="tagline">An AI-powered sensory accessibility wearable</span>
+    </div>
+    <div class="top-side">
+      <span class="demo-pill">Concept demo · simulated readings</span>
+      <button class="btn-quiet" type="button" data-about>About this demo</button>
+    </div>
+  </header>
+
+  <main class="stage" id="stage">
+    <section class="bench" aria-label="The wristband">
+      <div class="slot slot-band" id="bandSlotDesk"></div>
+      <aside class="legend" aria-label="Parts of the wristband">
+        <div class="legend-head"><p class="eyebrow">Nine parts</p></div>
+        <div class="legend-list">
+          <ul class="parts" id="partsDesk"></ul>
+          <p class="footnote">Concept layout for discussion. Parts and figures are illustrative.</p>
+        </div>
+      </aside>
+    </section>
+    <div class="slot" id="journeySlotDesk"></div>
+    <div class="slot" id="roomSlotDesk"></div>
+  </main>
+
+  <div class="phone" id="phone">
+    <div class="app" id="app">
+
+      <div class="statusbar" aria-hidden="true">
+        <span id="sbClock">14:20</span>
+        <span class="sb-island"></span>
+        <span class="sb-icons"><span data-ic="signal"></span><span data-ic="battery"></span></span>
+      </div>
+
+      <header class="app-head">
+        <span class="wordmark">SENSE</span>
+        <div class="app-head-side">
+          <button class="bandchip" type="button" id="bandChip" aria-label="Band connected, battery 82 percent. Open the band screen."><i></i>Band · 82%</button>
+          <button class="iconbtn" type="button" data-about aria-label="About this demo"><span data-ic="info"></span></button>
+        </div>
+      </header>
+
+      <div class="views" id="views">
+
+        <!-- NOW -->
+        <section class="view" id="view-now" aria-label="Now">
+          <div class="slot" id="roomSlotMob">
+            <section class="room" id="roomPanel" aria-label="The simulated room">
+              <div class="room-head">
+                <p class="eyebrow">The room <span class="tagchip">simulated</span></p>
+                <div class="room-head-side">
+                  <button class="btn alt sm" type="button" id="burstBtn"><span data-ic="burst"></span>Sudden loud sound</button>
+                  <button class="linkbtn sm" type="button" id="roomMore" aria-expanded="false" aria-controls="roomFine">Adjust</button>
+                </div>
+              </div>
+              <div class="places" id="places" role="group" aria-label="Place"></div>
+              <p class="room-note" id="roomNote" hidden></p>
+              <div class="room-fine" id="roomFine">
+                <div class="knob"><div class="knob-top"><span>Noise</span><output id="roomNoiseOut"></output></div><div id="roomNoise"></div></div>
+                <div class="knob"><div class="knob-top"><span>Light</span><output id="roomLightOut"></output></div><div id="roomLight"></div></div>
+                <div class="knob"><div class="knob-top"><span>Temperature</span><output id="roomTempOut"></output></div><div id="roomTemp"></div></div>
+                <button class="btn alt sm" type="button" id="burstBtn2"><span data-ic="burst"></span>Sudden loud sound</button>
+              </div>
+            </section>
+          </div>
+
+          <div class="hero" id="hero" data-state="calm">
+            <p class="hero-meta"><span id="heroPlace">Open office</span> · <span id="heroClock">14:20</span></p>
+            <h1 class="hero-title" id="heroTitle" role="status">Everything is within your limits</h1>
+            <p class="hero-sub" id="heroSub">Noise, light and temperature are checked against your profile.</p>
+            <div class="hero-bar" id="heroBar" hidden><i></i></div>
+            <button class="hero-act" type="button" id="heroAct" hidden></button>
+          </div>
+
+          <div class="cards" id="cards"></div>
+
+          <div class="slot" id="journeySlotMob">
+            <section class="journey" id="journey" aria-label="How SENSE works">
+              <p class="eyebrow">How it works</p>
+              <ol class="journey-steps" id="journeySteps"></ol>
+            </section>
+          </div>
+        </section>
+
+        <!-- BAND -->
+        <section class="view" id="view-band" aria-label="Band" hidden>
+          <div class="view-head">
+            <h2 class="view-title">Your band</h2>
+            <p class="view-lede">Three sensors, a vibration motor and one button to silence it.</p>
+          </div>
+          <div class="slot" id="bandSlotMob">
+            <div class="bandview" id="bandView">
+              <canvas id="bandCanvas" role="img" aria-label="3D model of the SENSE wristband. Drag to turn it."></canvas>
+              <svg class="leaders" id="leaders" aria-hidden="true"></svg>
+              <div class="ripples" id="ripples" aria-hidden="true"></div>
+              <div class="pins" id="pins"></div>
+              <div class="band-title">
+                <p class="eyebrow">The wristband</p>
+                <h2 class="bench-title">The band, part by part</h2>
+              </div>
+              <div class="band-ctl">
+                <div class="seg" role="group" aria-label="Band view" id="openSeg">
+                  <button type="button" data-open="0" aria-pressed="true">Closed</button>
+                  <button type="button" data-open="1" aria-pressed="false">Opened</button>
+                </div>
+              </div>
+              <p class="band-hint" id="bandHint">Drag to turn</p>
+              <div class="band-fallback" id="bandFallback" hidden>
+                <div class="iso" aria-hidden="true"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i></div>
+                <p>The 3D model could not start in this browser.<br>The parts are listed below.</p>
+              </div>
+            </div>
+          </div>
+          <div class="band-status">
+            <div class="bs-item"><span>Connection</span><b>Bluetooth LE · connected</b></div>
+            <div class="bs-item"><span>Battery</span><b>82%</b></div>
+          </div>
+          <div class="group">
+            <p class="group-title">What is inside</p>
+            <ul class="parts" id="parts"></ul>
+          </div>
+          <p class="footnote">Concept layout for discussion. Parts and figures are illustrative.</p>
+        </section>
+
+        <!-- PROFILE -->
+        <section class="view" id="view-profile" aria-label="Profile" hidden>
+          <div class="view-head">
+            <h2 class="view-title">Your profile</h2>
+            <p class="view-lede">You decide what matters. Change any of this at any time.</p>
+          </div>
+
+          <div class="group" data-limit="noise">
+            <div class="limit-top">
+              <span class="limit-name"><span data-ic="noise"></span>Noise</span>
+              <button class="switch" type="button" role="switch" aria-checked="true" data-watch="noise" aria-label="Watch noise"></button>
+            </div>
+            <div class="limit-body">
+              <p class="limit-read">Tell me above <b id="noiseMaxOut">70</b> <span class="unit">dB(A)</span></p>
+              <div id="noiseMax"></div>
+              <div class="ticks" data-ticks="noise"></div>
+            </div>
+          </div>
+
+          <div class="group" data-limit="light">
+            <div class="limit-top">
+              <span class="limit-name"><span data-ic="light"></span>Light</span>
+              <button class="switch" type="button" role="switch" aria-checked="true" data-watch="light" aria-label="Watch light"></button>
+            </div>
+            <div class="limit-body">
+              <p class="limit-read">Tell me above <b id="lightMaxOut">1,000</b> <span class="unit">lx</span></p>
+              <div id="lightMax"></div>
+              <div class="ticks" data-ticks="light"></div>
+            </div>
+          </div>
+
+          <div class="group" data-limit="temp">
+            <div class="limit-top">
+              <span class="limit-name"><span data-ic="temp"></span>Temperature</span>
+              <button class="switch" type="button" role="switch" aria-checked="true" data-watch="temp" aria-label="Watch temperature"></button>
+            </div>
+            <div class="limit-body">
+              <p class="limit-read">Tell me outside <b id="tempOut">16 to 27</b> <span class="unit">°C</span></p>
+              <div id="tempRange"></div>
+              <div class="ticks" data-ticks="temp"></div>
+            </div>
+          </div>
+
+          <div class="group">
+            <p class="group-title">How to tell me</p>
+            <div class="row">
+              <div class="row-text"><b>Band vibration</b><span>A gentle buzz on the wrist</span></div>
+              <button class="switch" type="button" role="switch" aria-checked="true" data-set="vib" aria-label="Band vibration"></button>
+            </div>
+            <div class="row sub" id="vibRow">
+              <div class="seg sm" role="group" aria-label="Vibration strength" id="vibSeg">
+                <button type="button" data-v="gentle" aria-pressed="true">Gentle</button>
+                <button type="button" data-v="medium" aria-pressed="false">Medium</button>
+                <button type="button" data-v="strong" aria-pressed="false">Strong</button>
+              </div>
+              <button class="btn alt sm" type="button" id="vibTry"><span data-ic="vib"></span>Try it</button>
+            </div>
+            <div class="row">
+              <div class="row-text"><b>Phone alert</b><span>A message in this app</span></div>
+              <button class="switch" type="button" role="switch" aria-checked="true" data-set="phone" aria-label="Phone alert"></button>
+            </div>
+            <div class="row col">
+              <div class="row-text"><b>Wait before telling me</b><span>Short spikes are ignored.</span></div>
+              <div class="seg sm" role="group" aria-label="Wait before alerting" id="waitSeg">
+                <button type="button" data-v="3" aria-pressed="false">3 s</button>
+                <button type="button" data-v="5" aria-pressed="true">5 s</button>
+                <button type="button" data-v="10" aria-pressed="false">10 s</button>
+                <button type="button" data-v="30" aria-pressed="false">30 s</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="group">
+            <p class="group-title">Options to offer me</p>
+            <div id="offerList"></div>
+          </div>
+
+          <div class="group">
+            <p class="group-title">Your data</p>
+            <ul class="facts">
+              <li><span data-ic="lock"></span><span><b>It measures the room, not you.</b> Sound level, brightness and temperature. No audio is recorded.</span></li>
+              <li><span data-ic="lock"></span><span><b>No diagnosis.</b> SENSE compares readings with the limits you set. It does not guess how you feel.</span></li>
+              <li><span data-ic="lock"></span><span><b>Yours alone.</b> Readings are not shared with employers or anyone else.</span></li>
+            </ul>
+            <button class="linkbtn" type="button" id="resetBtn">Reset the demo</button>
+          </div>
+        </section>
+
+        <!-- TODAY -->
+        <section class="view" id="view-today" aria-label="Today" hidden>
+          <div class="view-head">
+            <h2 class="view-title">Today so far</h2>
+            <p class="view-lede">A made-up day from 07:00, plus whatever happens in this demo. <span class="tagchip">Sample data</span></p>
+          </div>
+          <div class="tiles" id="tiles"></div>
+          <div class="daybox">
+            <div class="day-top">
+              <div class="day-read" id="dayRead"></div>
+              <div class="seg sm" role="group" aria-label="Show as" id="daySeg">
+                <button type="button" data-v="chart" aria-pressed="true">Chart</button>
+                <button type="button" data-v="table" aria-pressed="false">Table</button>
+              </div>
+            </div>
+            <div class="day-chart" id="dayChart" tabindex="0" aria-label="Chart of the day. Use the arrow keys to move along the time axis."></div>
+            <div class="day-table-wrap" id="dayTableWrap" hidden><table class="day-table" id="dayTable"></table></div>
+          </div>
+          <div class="group">
+            <p class="group-title">Alerts today</p>
+            <ol class="log" id="log"></ol>
+          </div>
+        </section>
+      </div>
+
+      <nav class="tabs" aria-label="Screens">
+        <button class="tab" type="button" data-tab="now" aria-current="page"><span data-ic="now"></span>Now</button>
+        <button class="tab" type="button" data-tab="band"><span data-ic="band"></span>Band</button>
+        <button class="tab" type="button" data-tab="profile"><span data-ic="profile"></span>Profile</button>
+        <button class="tab" type="button" data-tab="today"><span data-ic="today"></span>Today</button>
+      </nav>
+
+      <div class="sheet-layer" id="sheetLayer" hidden>
+        <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+          <div class="sheet-head">
+            <div class="grabber" aria-hidden="true"></div>
+            <button class="iconbtn sheet-close" type="button" id="sheetClose" aria-label="Close"><span data-ic="x"></span></button>
+          </div>
+          <div class="sheet-body" id="sheetBody"></div>
+        </div>
+      </div>
+      <div class="toast" id="toast" role="status" hidden></div>
+    </div>
+  </div>
+</div>
+
+<script id="threejs" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" async></script>
+
+<script>
+(function () {
+'use strict';
+/* ---- util.js ---- */
+const $ = (sel, root) => (root || document).querySelector(sel);
+const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+const ms = () => performance.now();
+const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)');
+const pad2 = n => String(n).padStart(2, '0');
+const NB = ' ';   // keeps a number and its unit on one line
+const clock = min => pad2(Math.floor(min / 60) % 24) + ':' + pad2(Math.floor(min) % 60);
+
+/* Small DOM builder. `text` is always set as text; `html` is only ever used for our own icon markup. */
+function h(tag, attrs) {
+  const node = document.createElement(tag);
+  if (attrs) {
+    for (const k in attrs) {
+      const v = attrs[k];
+      if (v == null || v === false) continue;
+      if (k === 'class') node.className = v;
+      else if (k === 'text') node.textContent = v;
+      else if (k.slice(0, 2) === 'on') node.addEventListener(k.slice(2), v);
+      else node.setAttribute(k, v === true ? '' : v);
+    }
+  }
+  for (let i = 2; i < arguments.length; i++) {
+    const kid = arguments[i];
+    if (kid == null || kid === false) continue;
+    if (Array.isArray(kid)) kid.forEach(x => x != null && x !== false && node.append(x));
+    else node.append(kid);
+  }
+  return node;
+}
+const SVGNS = 'http://www.w3.org/2000/svg';
+function s(tag, attrs) {
+  const n = document.createElementNS(SVGNS, tag);
+  if (attrs) for (const k in attrs) n.setAttribute(k, attrs[k]);
+  return n;
+}
+
+const ICONS = {
+  noise: '<path d="M4.5 10v4M8.25 6.5v11M12 9v6M15.75 4.5v15M19.5 9.5v5"/>',
+  light: '<circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/>',
+  temp: '<path d="M10 13.7V5.5a2 2 0 0 1 4 0v8.2a4 4 0 1 1-4 0z"/><path d="M12 9.5v7"/>',
+  now: '<path d="M3 12h4l2.4-6.5 4.2 13L16 12h5"/>',
+  band: '<rect x="7" y="7" width="10" height="10" rx="2.6"/><path d="M9.2 7V3.5h5.6V7M9.2 17v3.5h5.6V17"/>',
+  profile: '<path d="M4 7h8M17 7h3M4 17h3M12 17h8"/><circle cx="14.5" cy="7" r="2.2"/><circle cx="9.5" cy="17" r="2.2"/>',
+  today: '<path d="M4 5v14h16"/><path d="M7.5 15l3.2-4 3 2.4L18 8"/>',
+  home: '<path d="M4 11.2l8-6.4 8 6.4"/><path d="M6.5 9.6V19h11V9.6"/>',
+  office: '<path d="M5.5 20V5.6A1.6 1.6 0 0 1 7.1 4h9.8a1.6 1.6 0 0 1 1.6 1.6V20M3.5 20h17M9.2 8.5h1.6M13.2 8.5h1.6M9.2 12.5h1.6M13.2 12.5h1.6M10.6 20v-3.4h2.8V20"/>',
+  cafe: '<path d="M5 9.5h11v4.2a5.3 5.3 0 0 1-5.3 5.3h-.4A5.3 5.3 0 0 1 5 13.7V9.5z"/><path d="M16 11h1.4a2.4 2.4 0 0 1 0 4.8H16M8.5 3.8v2.6M12.2 3.8v2.6"/>',
+  shop: '<path d="M3.5 5h2.3l2.2 9.8h9.4L19.5 8H7"/><circle cx="9.6" cy="18.6" r="1.3"/><circle cx="16.4" cy="18.6" r="1.3"/>',
+  station: '<rect x="6" y="3.5" width="12" height="13" rx="3"/><path d="M6 10.5h12M9.2 20l1.3-3.5M14.8 20l-1.3-3.5M9.4 13.6h.01M14.6 13.6h.01"/>',
+  tram: '<rect x="6.5" y="6.5" width="11" height="11" rx="2.6"/><path d="M9 3.2h6M12 3.2v3.3M6.5 12h11M9.4 20.6l1-3.1M14.6 20.6l-1-3.1"/>',
+  vib: '<rect x="8.5" y="5" width="7" height="14" rx="2.2"/><path d="M5 8.8v6.4M19 8.8v6.4M2.2 10.6v2.8M21.8 10.6v2.8"/>',
+  check: '<path d="M5 12.6l4.4 4.4L19 7.4"/>',
+  x: '<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',
+  info: '<circle cx="12" cy="12" r="8.6"/><path d="M12 11v5.4M12 7.7h.01"/>',
+  up: '<path d="M12 19V6M6.5 11.2L12 5.6l5.5 5.6"/>',
+  down: '<path d="M12 5v13M6.5 12.8l5.5 5.6 5.5-5.6"/>',
+  off: '<circle cx="12" cy="12" r="8.6"/><path d="M6 18L18 6"/>',
+  chev: '<path d="M9.5 6.5L15 12l-5.5 5.5"/>',
+  spot: '<path d="M12 20.8s-6.4-5.5-6.4-10.3a6.4 6.4 0 0 1 12.8 0c0 4.8-6.4 10.3-6.4 10.3z"/><circle cx="12" cy="10.4" r="2.3"/>',
+  pause: '<circle cx="12" cy="12" r="8.6"/><path d="M10 9v6M14 9v6"/>',
+  aid: '<path d="M5 14.5v-2.3a7 7 0 0 1 14 0v2.3"/><path d="M5 13.8h2.6V19h-1A1.6 1.6 0 0 1 5 17.4v-3.6zM19 13.8h-2.6V19h1a1.6 1.6 0 0 0 1.6-1.6v-3.6z"/>',
+  go: '<path d="M5 12h13M12.8 6.8L18 12l-5.2 5.2"/>',
+  lock: '<rect x="5.8" y="10.6" width="12.4" height="9" rx="2.2"/><path d="M8.6 10.6V8.1a3.4 3.4 0 0 1 6.8 0v2.5"/>',
+  burst: '<path d="M4 9.5v5h3.2l4.3 3.6V5.9L7.2 9.5H4zM15.2 9a4.2 4.2 0 0 1 0 6M17.8 6.6a7.6 7.6 0 0 1 0 10.8"/>',
+  clock: '<circle cx="12" cy="12" r="8.6"/><path d="M12 7.4V12l3 2"/>',
+  signal: '<path d="M5 18v-3M10 18v-6M15 18V9M20 18V6"/>',
+  battery: '<rect x="2.5" y="7.8" width="17" height="8.6" rx="2.4"/><path d="M22 11v2.2M6 11v2.2M9 11v2.2M12 11v2.2"/>'
+};
+function iconSvg(name) {
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">' + (ICONS[name] || '') + '</svg>';
+}
+function icon(name, cls) {
+  const el = document.createElement('span');
+  el.className = 'ic' + (cls ? ' ' + cls : '');
+  el.setAttribute('aria-hidden', 'true');
+  el.innerHTML = iconSvg(name);
+  return el;
+}
+
+/* Seeded random numbers, so the sample day is the same every time. */
+function rng(seed) {
+  return function () {
+    seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function gaussFrom(rand) {
+  return function () {
+    let u = 0;
+    while (u === 0) u = rand();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * rand());
+  };
+}
+const gauss = gaussFrom(Math.random);
+
+/* Lux spans orders of magnitude, so it is rounded by size. */
+function niceLux(v) {
+  const step = v < 200 ? 10 : v < 1000 ? 50 : v < 5000 ? 100 : v < 20000 ? 500 : 1000;
+  return Math.round(v / step) * step;
+}
+function showLux(v) {
+  const r = v < 100 ? Math.round(v) : v < 1000 ? Math.round(v / 5) * 5 : v < 10000 ? Math.round(v / 10) * 10 : Math.round(v / 100) * 100;
+  return r.toLocaleString('en-GB');
+}
+
+/* A slider that follows the finger anywhere on its bar (a native range input on iOS only moves from its knob).
+   One or two thumbs; linear or log scale. */
+function Slider(host, opt) {
+  const track = h('div', { class: 'slider-track' });
+  const fill = h('div', { class: 'slider-fill' });
+  track.append(fill);
+  let values = opt.values.slice();
+  const two = values.length === 2;
+  const gap = opt.gap || 0;
+  const thumbs = values.map((v, i) => {
+    const t = h('div', { class: 'slider-thumb', role: 'slider', tabindex: '0', 'aria-label': opt.labels[i], 'aria-valuemin': opt.min, 'aria-valuemax': opt.max });
+    track.append(t);
+    return t;
+  });
+  host.classList.add('slider');
+  host.append(track);
+
+  const toPos = v => opt.log ? Math.log(v / opt.min) / Math.log(opt.max / opt.min) : (v - opt.min) / (opt.max - opt.min);
+  const snap = v => clamp(opt.snap ? opt.snap(v) : Math.round(v / (opt.step || 1)) * (opt.step || 1), opt.min, opt.max);
+  const fromPos = p => snap(opt.log ? opt.min * Math.pow(opt.max / opt.min, p) : opt.min + p * (opt.max - opt.min));
+
+  function paint() {
+    const ps = values.map(v => clamp(toPos(v), 0, 1) * 100);
+    thumbs.forEach((t, i) => {
+      t.style.left = ps[i] + '%';
+      t.setAttribute('aria-valuenow', values[i]);
+      if (opt.text) t.setAttribute('aria-valuetext', opt.text(values[i]));
+    });
+    fill.style.left = (two ? ps[0] : 0) + '%';
+    fill.style.width = (two ? ps[1] - ps[0] : ps[0]) + '%';
+  }
+  function setValue(i, v) {
+    if (two) v = i === 0 ? Math.min(v, values[1] - gap) : Math.max(v, values[0] + gap);
+    v = snap(v);
+    if (v === values[i]) return;
+    values[i] = v;
+    paint();
+    opt.onInput(values.slice(), i);
+  }
+  function fromEvent(e, i) {
+    const r = track.getBoundingClientRect();
+    setValue(i, fromPos(clamp((e.clientX - r.left) / r.width, 0, 1)));
+  }
+  let active = null;
+  host.addEventListener('pointerdown', e => {
+    if (e.button) return;
+    const r = track.getBoundingClientRect();
+    const p = (e.clientX - r.left) / r.width;
+    active = two && Math.abs(p - toPos(values[1])) < Math.abs(p - toPos(values[0])) ? 1 : 0;
+    try { host.setPointerCapture(e.pointerId); } catch (err) { /* the pointer may already be gone */ }
+    thumbs[active].focus({ preventScroll: true });
+    fromEvent(e, active);
+    e.preventDefault();
+  });
+  host.addEventListener('pointermove', e => { if (active != null) fromEvent(e, active); });
+  const end = () => { active = null; };
+  host.addEventListener('pointerup', end);
+  host.addEventListener('pointercancel', end);
+  thumbs.forEach((t, i) => t.addEventListener('keydown', e => {
+    const dir = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1, PageUp: 5, PageDown: -5 }[e.key];
+    let v = null;
+    if (dir) {
+      if (opt.log) { let n = 0; v = values[i]; while (v === values[i] && n++ < 40) v = fromPos(clamp(toPos(values[i]) + dir * 0.012 * n, 0, 1)); }
+      else v = values[i] + dir * (opt.step || 1);
+    } else if (e.key === 'Home') v = opt.min;
+    else if (e.key === 'End') v = opt.max;
+    if (v == null) return;
+    e.preventDefault();
+    setValue(i, clamp(v, opt.min, opt.max));
+  }));
+  paint();
+  return {
+    set(vals) { values = vals.slice(); paint(); },
+    pos: toPos
+  };
+}
+
+/* ---- data.js ---- */
+/* What the band measures. `plot` is the range drawn in charts. */
+const METRICS = {
+  noise: { id: 'noise', name: 'Noise', unit: 'dB(A)', icon: 'noise', plot: [30, 100], show: v => String(Math.round(v)) },
+  light: { id: 'light', name: 'Light', unit: 'lx', icon: 'light', plot: [40, 4000], log: true, show: showLux },
+  temp: { id: 'temp', name: 'Temperature', unit: '°C', icon: 'temp', plot: [8, 34], show: v => v.toFixed(1) }
+};
+const METRIC_IDS = ['noise', 'light', 'temp'];
+const fmtVal = (m, v) => METRICS[m].show(v) + NB + METRICS[m].unit;
+
+/* Everyday anchors, so a number means something. Approximate, commonly quoted levels. */
+function likeText(m, v) {
+  if (m === 'noise') {
+    return 'about as loud as ' + (v < 35 ? 'a very quiet room' : v < 45 ? 'a quiet library' : v < 55 ? 'a quiet office'
+      : v < 65 ? 'normal conversation' : v < 72 ? 'a busy café' : v < 80 ? 'a busy street'
+      : v < 88 ? 'an announcement close by' : v < 96 ? 'a train passing' : 'heavy machinery');
+  }
+  if (m === 'light') {
+    return 'about as bright as ' + (v < 80 ? 'a dim room' : v < 250 ? 'a living room at night' : v < 650 ? 'office lighting'
+      : v < 1600 ? 'a brightly lit shop' : v < 5000 ? 'a seat by a sunny window' : v < 20000 ? 'outdoors on a grey day' : 'direct daylight');
+  }
+  return v < 12 ? 'cold' : v < 17 ? 'cool' : v < 24 ? 'mild' : v < 28 ? 'warm' : 'hot';
+}
+
+/* Places the wearer can be in. Typical levels; `wander` and `burst` give each room its own character. */
+const PLACES = [
+  { id: 'home', name: 'Home', icon: 'home', noise: 38, light: 170, temp: 21.5, wander: 1.2, jitter: 1.2 },
+  { id: 'office', name: 'Open office', icon: 'office', noise: 57, light: 480, temp: 22.5, wander: 1.8, jitter: 1.8, burst: { p: 0.02, db: 7, s: [1.5, 3] } },
+  { id: 'cafe', name: 'Café', icon: 'cafe', noise: 66, light: 260, temp: 24, wander: 1.2, jitter: 2, burst: { p: 0.07, db: 9, s: [2, 3.4] } },
+  { id: 'shop', name: 'Supermarket', icon: 'shop', noise: 63, light: 1150, temp: 18.5, wander: 1.6, jitter: 1.8, flicker: 0.05, burst: { p: 0.02, db: 6, s: [2, 3] } },
+  { id: 'station', name: 'Train station', icon: 'station', noise: 78, light: 560, temp: 18, wander: 2, jitter: 2.4, flicker: 0.07, burst: { p: 0.035, db: 9, s: [3, 6] } },
+  { id: 'tram', name: 'Packed tram', icon: 'tram', noise: 66, light: 300, temp: 28.5, wander: 1.2, jitter: 1.6 }
+];
+const placeOf = id => PLACES.find(p => p.id === id) || PLACES[1];
+
+/* The parts of the wristband, numbered as on the drawing. */
+const PARTS = [
+  { id: 'cover', n: 1, name: 'Top cover', text: 'A matte cover that keeps the band plain and discreet. It has a small window for the light sensor and a port for the microphone.' },
+  { id: 'light', n: 2, name: 'Light sensor', metric: 'light', text: 'Measures how bright the room is, in lux, through the window in the cover.' },
+  { id: 'mic', n: 3, name: 'Microphone', metric: 'noise', text: 'Measures how loud the room is, in dB(A). It keeps only the loudness number. No audio is recorded or sent.' },
+  { id: 'temp', n: 4, name: 'Temperature sensor', metric: 'temp', text: 'Measures the air temperature around you. It sits at the edge of the board, away from the parts that warm up.' },
+  { id: 'board', n: 5, name: 'Main board', text: 'A small processor reads the three sensors and sends the numbers to the app over Bluetooth Low Energy. The app compares them with your limits.' },
+  { id: 'motor', n: 6, name: 'Vibration motor', text: 'Gives a gentle vibration when a limit you set is crossed. You choose the strength, or switch it off.' },
+  { id: 'battery', n: 7, name: 'Battery', text: 'A small rechargeable cell that powers the band. It charges through contacts on the back of the case.' },
+  { id: 'button', n: 8, name: 'Side button', text: 'One press silences an alert straight away, without taking out the phone.' },
+  { id: 'case', n: 9, name: 'Case and strap', text: 'A slim case on a soft strap, made to look like an ordinary wristband.' }
+];
+const INTERNAL = { temp: 1, board: 1, motor: 1, battery: 1 };
+
+const WAITS = [3, 5, 10, 30];
+const DEFAULT_PROFILE = {
+  watch: { noise: true, light: true, temp: true },
+  noiseMax: 70, lightMax: 1000, tempMin: 16, tempMax: 27,
+  vib: true, vibLevel: 'gentle', phone: true, wait: 5,
+  offer: { move: true, pause: true, aid: false }
+};
+
+/* The five steps of the briefing's user journey. */
+const JOURNEY = [
+  { k: 'Measure', d: 'Noise, light and temperature' },
+  { k: 'Compare', d: 'Against your own limits' },
+  { k: 'Notify', d: 'A gentle vibration, if wanted' },
+  { k: 'Offer choice', d: 'You decide what to do' },
+  { k: 'Learn', d: 'Was the alert useful?' }
+];
+
+function alertTitle(m, kind) {
+  return m === 'noise' ? 'Noise is above your limit' : m === 'light' ? 'Light is above your limit'
+    : kind === 'warm' ? 'It is warmer than your range' : 'It is cooler than your range';
+}
+function choiceLabel(c, m, kind) {
+  if (c === 'move') return m === 'noise' ? 'Find a quieter spot' : m === 'light' ? 'Move to softer light' : kind === 'warm' ? 'Find a cooler spot' : 'Find a warmer spot';
+  if (c === 'pause') return 'Take a short break';
+  if (c === 'aid') return m === 'noise' ? 'Put on my earplugs' : m === 'light' ? 'Put on my sunglasses' : kind === 'warm' ? 'Take off a layer' : 'Put on a layer';
+  if (c === 'continue') return 'Continue without help';
+  return 'Pause alerts for 30 minutes';
+}
+function choicePast(c, m, kind) {
+  if (c === 'move') return m === 'noise' ? 'Found a quieter spot' : m === 'light' ? 'Moved to softer light' : kind === 'warm' ? 'Found a cooler spot' : 'Found a warmer spot';
+  if (c === 'pause') return 'Took a short break';
+  if (c === 'aid') return m === 'noise' ? 'Put on earplugs' : m === 'light' ? 'Put on sunglasses' : kind === 'warm' ? 'Took off a layer' : 'Put on a layer';
+  if (c === 'continue') return 'Continued without help';
+  if (c === 'snooze') return 'Paused alerts for 30 minutes';
+  return 'Silenced the alert';
+}
+const CHOICE_ICON = { move: 'spot', pause: 'pause', aid: 'aid', continue: 'go' };
+
+/* A made-up day, one point a minute from 07:00 to 14:19. The live demo carries on from 14:20. */
+const DAY_START = 420, DEMO_START = 860;
+function buildDay() {
+  const g = gaussFrom(rng(20261115));
+  const pts = [];
+  let wn = 0, wl = 0, wt = 0;
+  for (let t = DAY_START; t < DEMO_START; t++) {
+    wn = wn * 0.8 + g() * 1.1;
+    wl = wl * 0.85 + g() * 0.03;
+    wt = wt * 0.9 + g() * 0.06;
+    let place, n, l, c;
+    if (t < 470) {                       // breakfast at home
+      place = 'home';
+      n = 37 + (t >= 438 && t < 452 ? 11 : 0) + (t >= 462 ? 6 : 0);
+      l = 110 + (t - 420) * 3.2;
+      c = 20.6 + (t - 420) * 0.02;
+    } else if (t < 490) {                // a packed, overheated tram
+      place = 'tram';
+      const k = (t - 470) / 20;
+      n = 66 + 2 * Math.sin(k * 9);
+      l = 300;
+      c = 25.2 + 3.6 * Math.sin(Math.PI * Math.min(1, k * 1.15));
+    } else if (t < 510) {                // the station: loud, then a quieter corner
+      place = 'station';
+      const k = t - 490;
+      n = k < 6 ? 77 + (k >= 3 && k < 5 ? 10 : 0) : 59;
+      l = k < 6 ? 560 : 380;
+      c = 18.4 - k * 0.03;
+    } else if (t < 750) {                // morning at the office, a meeting at ten
+      place = 'office';
+      n = 55 + (t >= 600 && t < 645 ? 7 : 0) + 1.5 * Math.sin(t / 23);
+      l = 480 + 30 * Math.sin(t / 60);
+      c = 21.8 + (t - 510) * 0.006;
+    } else if (t < 795) {                // lunch in a café that fills up
+      place = 'cafe';
+      const k = t - 750;
+      n = 66.5 + 2 * Math.sin(k / 4) + (k >= 15 && k < 23 ? 7 : 0);
+      l = 260;
+      c = 23.6 + k * 0.02;
+    } else {                             // back at the office
+      place = 'office';
+      n = 56 + 1.5 * Math.sin(t / 19);
+      l = 500 + 25 * Math.sin(t / 50);
+      c = 23 + 0.2 * Math.sin(t / 40);
+    }
+    pts.push({ t, place, noise: n + wn, light: l * Math.exp(wl), temp: c + wt });
+  }
+  return pts;
+}
+/* Example alerts earlier in the sample day. Their values are read from the day's own data. */
+const EXAMPLE_ALERTS = [
+  { t: 474, metric: 'temp', kind: 'warm', limit: 27, choice: 'continue', feedback: 'not' },
+  { t: 491, metric: 'noise', kind: 'over', limit: 70, choice: 'move', feedback: 'useful' },
+  { t: 766, metric: 'noise', kind: 'over', limit: 70, choice: 'pause', feedback: 'useful' }
+];
+
+/* ---- sim.js ---- */
+/* The simulated room, the band's readings, and the alert flow: measure, compare, notify, offer choice, learn. */
+const bus = (function () {
+  const map = {};
+  return {
+    on(evt, fn) { (map[evt] = map[evt] || []).push(fn); },
+    emit(evt, data) { (map[evt] || []).forEach(fn => fn(data)); }
+  };
+})();
+
+/* ----- the user's profile (kept in this browser only) ----- */
+const STORE_KEY = 'sense-demo-profile-v1';
+function freshProfile() { return JSON.parse(JSON.stringify(DEFAULT_PROFILE)); }
+function loadProfile() {
+  const p = freshProfile();
+  try {
+    const raw = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
+    if (raw && typeof raw === 'object') {
+      const num = (k, lo, hi) => { if (typeof raw[k] === 'number' && raw[k] >= lo && raw[k] <= hi) p[k] = raw[k]; };
+      num('noiseMax', 40, 100); num('lightMax', 100, 20000); num('tempMin', 5, 34); num('tempMax', 6, 35);
+      if (p.tempMin > p.tempMax - 2) { p.tempMin = DEFAULT_PROFILE.tempMin; p.tempMax = DEFAULT_PROFILE.tempMax; }
+      if (WAITS.indexOf(raw.wait) >= 0) p.wait = raw.wait;
+      if (['gentle', 'medium', 'strong'].indexOf(raw.vibLevel) >= 0) p.vibLevel = raw.vibLevel;
+      ['vib', 'phone'].forEach(k => { if (typeof raw[k] === 'boolean') p[k] = raw[k]; });
+      ['watch', 'offer'].forEach(g => { if (raw[g]) for (const k in p[g]) if (typeof raw[g][k] === 'boolean') p[g][k] = raw[g][k]; });
+    }
+  } catch (err) { /* private window or blocked storage: the defaults are fine */ }
+  return p;
+}
+let profile = loadProfile();
+function saveProfile() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(profile)); } catch (err) { /* not essential */ }
+  bus.emit('profile');
+}
+
+/* ----- state ----- */
+const HIST_N = 90;
+const startPlace = placeOf('office');
+const sim = {
+  t0: ms(), last: ms(), n: 0, flowId: 0,
+  room: { place: startPlace.id, noise: startPlace.noise, light: startPlace.light, temp: startPlace.temp, adjust: null, note: '' },
+  env: { noise: startPlace.noise, light: startPlace.light, temp: startPlace.temp },
+  val: { noise: startPlace.noise, light: startPlace.light, temp: startPlace.temp },
+  wander: { noise: 0, light: 0, temp: 0 },
+  burst: { until: 0, db: 0 },
+  hist: { noise: [], light: [], temp: [] },
+  st: {
+    noise: { over: false, kind: null, limit: 0, since: 0, alerted: false },
+    light: { over: false, kind: null, limit: 0, since: 0, alerted: false },
+    temp: { over: false, kind: null, limit: 0, since: 0, alerted: false }
+  },
+  flow: null, pausedUntil: 0, breakUntil: 0, cooldownUntil: 0, buzzUntil: 0
+};
+const simMinute = () => DEMO_START + (ms() - sim.t0) / 60000;
+
+const day = { pts: buildDay(), acc: null };
+function exampleLog() {
+  return EXAMPLE_ALERTS.map(a => {
+    const p = day.pts[a.t - DAY_START];
+    return { t: a.t, metric: a.metric, kind: a.kind, limit: a.limit, value: p[a.metric], place: p.place, choice: a.choice, feedback: a.feedback, learn: null };
+  });
+}
+let log = exampleLog();
+
+/* ----- the room moves, the band follows ----- */
+function advance(dt, t) {
+  const P = placeOf(sim.room.place), w = sim.wander, adj = sim.room.adjust || {};
+  w.noise += -w.noise / 6 * dt + P.wander * Math.sqrt(2 * dt / 6) * gauss();
+  w.light += -w.light / 5 * dt + (P.flicker || 0.03) * Math.sqrt(2 * dt / 5) * gauss();
+  w.temp += -w.temp / 10 * dt + 0.1 * Math.sqrt(2 * dt / 10) * gauss();
+  if (P.burst && !sim.room.adjust && t > sim.burst.until + 2500 && Math.random() < P.burst.p * dt) {
+    sim.burst = { until: t + 1000 * lerp(P.burst.s[0], P.burst.s[1], Math.random()), db: P.burst.db * (0.85 + 0.3 * Math.random()) };
+  }
+  const b = t < sim.burst.until ? sim.burst.db : 0;
+  const tn = clamp(sim.room.noise + (adj.noise || 0), 28, 108) + w.noise + b;
+  const tl = clamp(sim.room.light * (adj.light || 1), 5, 60000) * Math.exp(w.light);
+  const tt = sim.room.temp + (adj.temp || 0) + w.temp;
+  const e = sim.env, v = sim.val;
+  e.noise += (tn - e.noise) * (1 - Math.exp(-dt / 0.6));
+  e.light *= Math.pow(tl / e.light, 1 - Math.exp(-dt / 0.8));
+  e.temp += (tt - e.temp) * (1 - Math.exp(-dt / 3.5));
+  v.noise += (e.noise + P.jitter * 0.5 * gauss() - v.noise) * 0.55;
+  v.light += (e.light * (1 + 0.006 * gauss()) - v.light) * 0.6;
+  v.temp += (e.temp + 0.02 * gauss() - v.temp) * 0.5;
+}
+
+/* Is this reading outside the user's own limits? Once outside, it must come back by a small margin to count as settled. */
+function judge(m, latched) {
+  const p = profile, v = sim.val[m];
+  if (!p.watch[m]) return null;
+  if (m === 'noise') return v > p.noiseMax - (latched ? 1 : 0) ? { kind: 'over', limit: p.noiseMax } : null;
+  if (m === 'light') return v > p.lightMax * (latched ? 0.97 : 1) ? { kind: 'over', limit: p.lightMax } : null;
+  if (v > p.tempMax - (latched ? 0.3 : 0)) return { kind: 'warm', limit: p.tempMax };
+  if (v < p.tempMin + (latched ? 0.3 : 0)) return { kind: 'cool', limit: p.tempMin };
+  return null;
+}
+const alertsOn = () => profile.vib || profile.phone;
+
+function pushHistory() {
+  METRIC_IDS.forEach(m => { const a = sim.hist[m]; a.push(sim.val[m]); if (a.length > HIST_N) a.shift(); });
+}
+/* Each finished minute of the demo is added to the day's data. */
+function accumulateMinute() {
+  const now = Math.floor(simMinute());
+  let a = day.acc;
+  if (a && a.minute !== now && a.n) {
+    day.pts.push({ t: a.minute, place: a.place, noise: a.noise / a.n, light: a.light / a.n, temp: a.temp / a.n });
+    a = null;
+    bus.emit('minute');
+  }
+  if (!a) a = day.acc = { minute: now, place: sim.room.place, n: 0, noise: 0, light: 0, temp: 0 };
+  a.place = sim.room.place;
+  a.n++; a.noise += sim.val.noise; a.light += sim.val.light; a.temp += sim.val.temp;
+}
+
+function tickSim() {
+  const t = ms();
+  const dt = clamp((t - sim.last) / 1000, 0.05, 1);
+  sim.last = t;
+  advance(dt, t);
+
+  let changed = false;
+  METRIC_IDS.forEach(m => {
+    const st = sim.st[m], r = judge(m, st.over);
+    if (r) {
+      if (!st.over) { st.over = true; st.since = t; st.alerted = false; changed = true; }
+      if (st.kind !== r.kind) { st.kind = r.kind; changed = true; }
+      st.limit = r.limit;
+    } else if (st.over) {
+      st.over = false; st.alerted = false; changed = true;
+    }
+  });
+  if (sim.breakUntil && t >= sim.breakUntil) { sim.breakUntil = 0; changed = true; }
+  if (sim.pausedUntil && t >= sim.pausedUntil) { sim.pausedUntil = 0; changed = true; }
+
+  if (!sim.flow && alertsOn() && t >= sim.pausedUntil && t >= sim.cooldownUntil) {
+    for (const m of METRIC_IDS) {
+      const st = sim.st[m];
+      if (st.over && !st.alerted && t - st.since >= profile.wait * 1000) { fire(m); changed = true; break; }
+    }
+  }
+  sim.n++;
+  if (sim.n % 2 === 0) bus.emit('tick');
+  if (sim.n % 4 === 0) { pushHistory(); accumulateMinute(); bus.emit('second'); }
+  if (changed) bus.emit('state');
+}
+
+/* Which of the five steps is happening now. */
+function journeyStep() {
+  const f = sim.flow;
+  if (f) return f.stage === 'notify' ? 2 : f.stage === 'choice' ? 3 : 4;
+  const t = ms();
+  if (alertsOn() && t >= sim.pausedUntil && METRIC_IDS.some(m => sim.st[m].over && !sim.st[m].alerted)) return 1;
+  return 0;
+}
+/* Seconds until the next alert, for the first reading that is outside and not yet announced. */
+function pendingAlert() {
+  const t = ms();
+  if (sim.flow || !alertsOn() || t < sim.pausedUntil) return null;
+  for (const m of METRIC_IDS) {
+    const st = sim.st[m];
+    if (st.over && !st.alerted) {
+      const left = Math.max(profile.wait - (t - st.since) / 1000, (sim.cooldownUntil - t) / 1000, 0);
+      return { metric: m, kind: st.kind, left, total: profile.wait };
+    }
+  }
+  return null;
+}
+
+/* ----- the alert flow ----- */
+function fire(m) {
+  const st = sim.st[m];
+  st.alerted = true;
+  const f = sim.flow = {
+    id: ++sim.flowId, metric: m, kind: st.kind, value: sim.val[m], limit: st.limit,
+    t: Math.floor(simMinute()), place: sim.room.place, stage: 'notify', choice: null, feedback: null, learn: null
+  };
+  bus.emit('alert', f);
+  setTimeout(() => { if (sim.flow === f && f.stage === 'notify') { f.stage = 'choice'; bus.emit('state'); } }, 1600);
+}
+function choose(c) {
+  const f = sim.flow;
+  if (!f || f.choice) return;
+  f.choice = c;
+  const t = ms(), r = sim.room;
+  if (c === 'move' || c === 'pause') {
+    // The wearer steps away, so the room around the band changes.
+    if (f.metric === 'noise') r.adjust = { noise: Math.min(r.noise - 16, f.limit - 9) - r.noise };
+    else if (f.metric === 'light') r.adjust = { light: Math.min(r.light * 0.45, f.limit * 0.6) / r.light };
+    else r.adjust = { temp: ((profile.tempMin + profile.tempMax) / 2 - r.temp) * 0.75 };
+    r.note = c === 'pause' ? 'Taking a break somewhere calmer.'
+      : f.metric === 'noise' ? 'Now in a quieter spot nearby.'
+      : f.metric === 'light' ? 'Now in softer light nearby.'
+      : f.kind === 'warm' ? 'Now in a cooler spot nearby.' : 'Now in a warmer spot nearby.';
+    sim.burst = { until: 0, db: 0 };
+    bus.emit('room');
+  }
+  if (c === 'pause') sim.breakUntil = sim.pausedUntil = t + 5 * 60000;
+  if (c === 'snooze') sim.pausedUntil = t + 30 * 60000;
+  if (c === 'snooze' || c === 'dismiss') { finish(); return; }
+  f.stage = 'feedback';
+  bus.emit('state');
+}
+function giveFeedback(v) {
+  const f = sim.flow;
+  if (!f) return;
+  f.feedback = v;
+  if (v === 'not' && learnOptions(f).length) { f.stage = 'learn'; bus.emit('state'); }
+  else finish();
+}
+/* What the profile could change after a "not useful". The user picks; nothing changes on its own. */
+function learnOptions(f) {
+  const out = [], p = profile;
+  if (f.metric === 'noise' && p.noiseMax < 100) { const v = Math.min(100, p.noiseMax + 5); out.push({ id: 'raise', label: 'Raise my noise limit to ' + v + NB + 'dB(A)', done: 'Your noise limit is now ' + v + NB + 'dB(A).', apply() { p.noiseMax = v; } }); }
+  if (f.metric === 'light' && p.lightMax < 20000) { const v = Math.min(20000, niceLux(p.lightMax * 1.25)); out.push({ id: 'raise', label: 'Raise my light limit to ' + showLux(v) + NB + 'lx', done: 'Your light limit is now ' + showLux(v) + NB + 'lx.', apply() { p.lightMax = v; } }); }
+  if (f.metric === 'temp' && f.kind === 'warm' && p.tempMax < 35) { const v = p.tempMax + 1; out.push({ id: 'raise', label: 'Move my upper limit to ' + v + NB + '°C', done: 'Your range now ends at ' + v + NB + '°C.', apply() { p.tempMax = v; } }); }
+  if (f.metric === 'temp' && f.kind === 'cool' && p.tempMin > 5) { const v = p.tempMin - 1; out.push({ id: 'raise', label: 'Move my lower limit to ' + v + NB + '°C', done: 'Your range now starts at ' + v + NB + '°C.', apply() { p.tempMin = v; } }); }
+  const next = WAITS[WAITS.indexOf(p.wait) + 1];
+  if (next) out.push({ id: 'wait', label: 'Wait ' + next + NB + 'seconds before telling me', done: 'SENSE now waits ' + next + ' seconds before telling you.', apply() { p.wait = next; } });
+  return out;
+}
+function learn(id) {
+  const f = sim.flow;
+  if (!f) return null;
+  f.learn = id;
+  const opt = learnOptions(f).find(o => o.id === id);
+  if (opt) { opt.apply(); saveProfile(); }
+  finish();
+  return opt ? opt.done : null;
+}
+function finish() {
+  const f = sim.flow;
+  if (!f) return;
+  log.push({ t: f.t, metric: f.metric, kind: f.kind, limit: f.limit, value: f.value, place: f.place, choice: f.choice || 'dismiss', feedback: f.feedback, learn: f.learn, live: true });
+  sim.flow = null;
+  sim.cooldownUntil = ms() + 12000;
+  bus.emit('log');
+  bus.emit('state');
+}
+function resumeAlerts() { sim.pausedUntil = 0; sim.breakUntil = 0; bus.emit('state'); }
+
+/* ----- controls for the room ----- */
+function setPlace(id) {
+  const P = placeOf(id), r = sim.room;
+  r.place = P.id; r.noise = P.noise; r.light = P.light; r.temp = P.temp; r.adjust = null; r.note = '';
+  sim.burst = { until: 0, db: 0 };
+  bus.emit('room');
+}
+function setRoom(m, v) {
+  const r = sim.room;
+  r[m] = v;
+  if (r.adjust) { r.adjust = null; r.note = ''; }
+  bus.emit('room');
+}
+function suddenSound() { sim.burst = { until: ms() + 3000, db: 16 }; }
+
+function resetDemo() {
+  profile = freshProfile();
+  try { localStorage.removeItem(STORE_KEY); } catch (err) { /* not essential */ }
+  log = exampleLog();
+  sim.flow = null; sim.pausedUntil = 0; sim.breakUntil = 0; sim.cooldownUntil = 0;
+  METRIC_IDS.forEach(m => { const st = sim.st[m]; st.over = false; st.alerted = false; });
+  setPlace('office');
+  bus.emit('profile'); bus.emit('log'); bus.emit('state');
+}
+
+/* Start with a minute and a half of history so the first frame already shows a trace. */
+(function prefill() {
+  const t = ms();
+  for (let i = 0; i < 12; i++) advance(1, t - 200000);
+  for (let i = 0; i < HIST_N; i++) { advance(1, t - 200000); pushHistory(); }
+})();
+
+/* ---- charts.js ---- */
+/* Charts. One measure per plot (never two scales on one plot); turquoise inside the user's range, coral outside it. */
+function fracIn(dom, v, log) {
+  const f = log ? Math.log(v / dom[0]) / Math.log(dom[1] / dom[0]) : (v - dom[0]) / (dom[1] - dom[0]);
+  return clamp(f, 0, 1);
+}
+/* The band of values that counts as "inside your range" for a measure: [low, high], either may be open. */
+function rangeOf(m) {
+  const p = profile;
+  if (!p.watch[m]) return [null, null];
+  if (m === 'noise') return [null, p.noiseMax];
+  if (m === 'light') return [null, p.lightMax];
+  return [p.tempMin, p.tempMax];
+}
+const isOutside = (m, v) => { const r = rangeOf(m); return (r[1] != null && v > r[1]) || (r[0] != null && v < r[0]); };
+
+/* ----- live trace on a reading card: the last 90 seconds against the limit ----- */
+function Spark(host, m) {
+  const M = METRICS[m], W = 100, H = 40, PAD = 4, uid = 'sp-' + m;
+  const svg = s('svg', { class: 'spark-svg', viewBox: '0 0 ' + W + ' ' + H, preserveAspectRatio: 'none', 'aria-hidden': 'true' });
+  // The line is coral wherever it leaves the range; the wash under it is coral only above an upper limit.
+  const cIn = s('clipPath', { id: uid + '-in' }), cOut = s('clipPath', { id: uid + '-out' });
+  const cAreaIn = s('clipPath', { id: uid + '-ain' }), cAreaOut = s('clipPath', { id: uid + '-aout' });
+  const defs = s('defs');
+  defs.append(cIn, cOut, cAreaIn, cAreaOut);
+  svg.append(defs);
+  const path = (cls, clip) => { const p = s('path', { class: cls, 'clip-path': 'url(#' + clip + ')' }); svg.append(p); return p; };
+  const aIn = path('spark-area', uid + '-ain'), aOut = path('spark-area is-out', uid + '-aout');
+  const lIn = path('spark-line', uid + '-in'), lOut = path('spark-line is-out', uid + '-out');
+  const limHi = s('line', { class: 'spark-limit', x1: 0, x2: W }), limLo = s('line', { class: 'spark-limit', x1: 0, x2: W });
+  svg.append(limHi, limLo);
+  const tagHi = h('span', { class: 'spark-tag' }), tagLo = h('span', { class: 'spark-tag is-below' });
+  const dot = h('i', { class: 'spark-dot' });
+  host.append(svg, tagHi, tagLo, dot);
+
+  const y = v => PAD + (1 - fracIn(M.plot, v, M.log)) * (H - 2 * PAD);
+  const rect = (parent, y0, y1) => parent.append(s('rect', { x: -4, y: y0, width: W + 8, height: Math.max(0, y1 - y0) }));
+
+  function draw() {
+    const data = sim.hist[m], n = data.length;
+    if (n < 2) return;
+    let d = '';
+    for (let i = 0; i < n; i++) d += (i ? 'L' : 'M') + (i / (n - 1) * W).toFixed(2) + ' ' + y(data[i]).toFixed(2);
+    const area = d + 'L' + W + ' ' + (H + 2) + 'L0 ' + (H + 2) + 'Z';
+    aIn.setAttribute('d', area); aOut.setAttribute('d', area);
+    lIn.setAttribute('d', d); lOut.setAttribute('d', d);
+
+    const r = rangeOf(m);
+    const top = r[1] != null ? y(r[1]) : -6, bottom = r[0] != null ? y(r[0]) : H + 6;
+    [cIn, cOut, cAreaIn, cAreaOut].forEach(c => c.replaceChildren());
+    rect(cIn, top, bottom);
+    rect(cAreaIn, top, H + 6);
+    if (r[1] != null) { rect(cOut, -6, top); rect(cAreaOut, -6, top); }
+    if (r[0] != null) rect(cOut, bottom, H + 6);
+
+    const showLine = (line, tag, on, yy, text) => {
+      line.style.display = tag.style.display = on ? '' : 'none';
+      if (!on) return;
+      line.setAttribute('y1', yy); line.setAttribute('y2', yy);
+      tag.style.top = (yy / H * 100) + '%';
+      tag.textContent = text;
+    };
+    showLine(limHi, tagHi, r[1] != null, top, (m === 'temp' ? 'max ' : 'limit ') + (m === 'light' ? showLux(r[1]) : r[1]));
+    showLine(limLo, tagLo, r[0] != null, bottom, 'min ' + r[0]);
+    // keep the upper label inside the box when the limit sits near the top
+    tagHi.classList.toggle('is-below', r[1] != null && top < 12);
+
+    const last = data[n - 1];
+    dot.style.top = (y(last) / H * 100) + '%';
+    dot.classList.toggle('is-out', isOutside(m, last));
+  }
+  return { draw };
+}
+
+/* ----- the day: three small plots on one time axis ----- */
+/* The recorded minutes plus the one in progress, so "now" is always on the chart. */
+function dayPoints() {
+  const a = day.acc, pts = day.pts;
+  if (!a || !a.n || pts[pts.length - 1].t >= a.minute) return pts;
+  return pts.concat({ t: a.minute, place: a.place, noise: a.noise / a.n, light: a.light / a.n, temp: a.temp / a.n });
+}
+function daySegments(pts) {
+  const out = [];
+  pts.forEach(p => {
+    const last = out[out.length - 1];
+    if (last && last.place === p.place) { last.to = p.t; last.pts.push(p); }
+    else out.push({ place: p.place, from: p.t, to: p.t, pts: [p] });
+  });
+  return out;
+}
+const SHORT_PLACE = { home: 'Home', office: 'Office', cafe: 'Café', shop: 'Shop', station: 'Station', tram: 'Tram' };
+
+function DayChart(host, readEl) {
+  const PANELS = [
+    { m: 'noise', dom: [30, 95], ticks: [40, 60, 80] },
+    { m: 'light', dom: [50, 3000], ticks: [100, 1000], log: true },
+    { m: 'temp', dom: [11, 32], ticks: [15, 25] }
+  ];
+  const L = 30, R = 8, STRIP = 20, TITLE = 20, PH = 60, GAP = 8, AXIS = 18;
+  const svg = s('svg', { class: 'day-svg', role: 'img', 'aria-label': 'Noise, light and temperature through the day' });
+  host.append(svg);
+  let hover = null, geo = null, cross = null, cur = dayPoints();
+
+  function render() {
+    const W = host.clientWidth;
+    if (!W) return;
+    const pts = cur = dayPoints(), n = pts.length, t0 = pts[0].t, t1 = pts[n - 1].t;
+    if (hover != null) hover = Math.min(hover, n - 1);
+    const pw = W - L - R;
+    const X = t => L + (t - t0) / (t1 - t0) * pw;
+    const total = STRIP + 4 + PANELS.length * (TITLE + PH + GAP) + AXIS;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + total);
+    svg.replaceChildren();
+    const defs = s('defs');
+    svg.append(defs);
+    const text = (cls, x, yy, str, anchor) => { const el = s('text', { class: cls, x, y: yy }); if (anchor) el.setAttribute('text-anchor', anchor); el.textContent = str; svg.append(el); return el; };
+
+    // where the wearer was, along the top
+    daySegments(pts).forEach(seg => {
+      const x0 = X(seg.from), x1 = Math.max(X(seg.to), x0 + 1);
+      svg.append(s('rect', { class: 'day-seg', x: x0 + 1, y: 0, width: Math.max(1, x1 - x0 - 2), height: STRIP, rx: 4 }));
+      const name = SHORT_PLACE[seg.place] || seg.place;
+      if (x1 - x0 > name.length * 6 + 7) text('day-segtext', (x0 + x1) / 2, 13.5, name, 'middle');
+    });
+
+    // time ticks every two hours
+    const hours = [];
+    for (let t = Math.ceil(t0 / 120) * 120; t <= t1; t += 120) hours.push(t);
+
+    const tops = [];
+    PANELS.forEach((P, i) => {
+      const M = METRICS[P.m], top = STRIP + 4 + i * (TITLE + PH + GAP) + TITLE, bot = top + PH;
+      tops.push({ top, bot });
+      const Y = v => bot - fracIn(P.dom, v, P.log) * PH;
+      const title = text('day-title', L, top - 7, M.name);
+      const unit = s('tspan', { class: 'day-unit', dx: 6 });
+      unit.textContent = M.unit;
+      title.append(unit);
+
+      hours.forEach(t => svg.append(s('line', { class: 'day-grid', x1: X(t), x2: X(t), y1: top, y2: bot })));
+      P.ticks.forEach(v => {
+        svg.append(s('line', { class: 'day-grid', x1: L, x2: W - R, y1: Y(v), y2: Y(v) }));
+        text('day-tick', L - 5, Y(v) + 3.5, v >= 1000 ? (v / 1000) + 'k' : String(v), 'end');
+      });
+      svg.append(s('line', { class: 'day-grid', x1: L, x2: W - R, y1: bot, y2: bot }));
+
+      // inside / outside the user's range, split with clip rectangles
+      const r = rangeOf(P.m);
+      const yHi = r[1] != null ? Y(r[1]) : top - 4, yLo = r[0] != null ? Y(r[0]) : bot + 4;
+      const cIn = s('clipPath', { id: 'day-in-' + P.m }), cOut = s('clipPath', { id: 'day-out-' + P.m });
+      const cAreaIn = s('clipPath', { id: 'day-ain-' + P.m }), cAreaOut = s('clipPath', { id: 'day-aout-' + P.m });
+      const rect = (parent, a, b) => parent.append(s('rect', { x: L - 2, y: a, width: pw + 4, height: Math.max(0, b - a) }));
+      rect(cIn, Math.max(yHi, top - 4), Math.min(yLo, bot + 4));
+      rect(cAreaIn, Math.max(yHi, top - 4), bot + 4);
+      if (r[1] != null) { rect(cOut, top - 4, yHi); rect(cAreaOut, top - 4, yHi); }
+      if (r[0] != null) rect(cOut, yLo, bot + 4);
+      defs.append(cIn, cOut, cAreaIn, cAreaOut);
+
+      let d = '';
+      pts.forEach((p, k) => { d += (k ? 'L' : 'M') + X(p.t).toFixed(1) + ' ' + Y(p[P.m]).toFixed(1); });
+      const area = d + 'L' + X(t1).toFixed(1) + ' ' + bot + 'L' + X(t0).toFixed(1) + ' ' + bot + 'Z';
+      [['day-area', 'ain', area], ['day-area is-out', 'aout', area], ['day-line', 'in', d], ['day-line is-out', 'out', d]].forEach(a => {
+        svg.append(s('path', { class: a[0], d: a[2], 'clip-path': 'url(#day-' + a[1] + '-' + P.m + ')' }));
+      });
+
+      const limit = (v, label, below) => {
+        const yy = Y(v);
+        if (yy < top - 1 || yy > bot + 1) return;
+        svg.append(s('line', { class: 'day-limit', x1: L, x2: W - R, y1: yy, y2: yy }));
+        text('day-limtext', L + 4, below ? yy + 10 : yy - 4, label);
+      };
+      if (r[1] != null) limit(r[1], (P.m === 'temp' ? 'max ' : 'limit ') + (P.m === 'light' ? showLux(r[1]) : r[1]), yHi - top < 14);
+      if (r[0] != null) limit(r[0], 'min ' + r[0], true);
+
+      // where an alert was sent
+      log.forEach(a => {
+        if (a.metric !== P.m || a.t < t0) return;
+        const at = pts[Math.min(n - 1, a.t - t0)] || pts[n - 1];
+        const near = at.t === a.t ? at : pts.reduce((b, q) => Math.abs(q.t - a.t) < Math.abs(b.t - a.t) ? q : b, pts[n - 1]);
+        svg.append(s('circle', { class: 'day-mark', cx: X(near.t), cy: Y(near[P.m]), r: 4.5 }));
+      });
+    });
+
+    const axisY = tops[tops.length - 1].bot + 13;
+    hours.forEach(t => text('day-tick', X(t), axisY, clock(t), 'middle'));
+
+    cross = s('g', { 'aria-hidden': 'true' });
+    svg.append(cross);
+    geo = { X, t0, t1, pw, tops, n };
+    drawCross();
+    renderRead();
+  }
+
+  function drawCross() {
+    if (!cross || !geo) return;
+    cross.replaceChildren();
+    if (hover == null) return;
+    const p = cur[hover], x = geo.X(p.t);
+    cross.append(s('line', { class: 'day-cross', x1: x, x2: x, y1: geo.tops[0].top - 2, y2: geo.tops[geo.tops.length - 1].bot }));
+    PANELS.forEach((P, i) => {
+      const yy = geo.tops[i].bot - fracIn(P.dom, p[P.m], P.log) * PH;
+      cross.append(s('circle', { class: 'day-crossdot', cx: x, cy: yy, r: 4 }));
+    });
+  }
+  /* The readout lists every measure at the chosen minute; with nothing chosen it shows the latest minute. */
+  function renderRead() {
+    const p = cur[hover == null ? cur.length - 1 : hover];
+    readEl.replaceChildren(
+      h('b', { text: clock(p.t) + ' · ' + placeOf(p.place).name }),
+      h('span', { class: 'vals' }, METRIC_IDS.map(m => h('span', { text: fmtVal(m, p[m]) })))
+    );
+  }
+  function setHover(i) {
+    hover = i == null ? null : clamp(i, 0, cur.length - 1);
+    drawCross();
+    renderRead();
+  }
+  function fromPointer(e) {
+    if (!geo) return;
+    const box = svg.getBoundingClientRect();
+    const x = (e.clientX - box.left) / box.width * host.clientWidth;
+    const t = geo.t0 + clamp((x - L) / geo.pw, 0, 1) * (geo.t1 - geo.t0);
+    // nearest minute on record
+    let best = 0, bd = Infinity;
+    for (let k = 0; k < cur.length; k++) { const dd = Math.abs(cur[k].t - t); if (dd < bd) { bd = dd; best = k; } }
+    setHover(best);
+  }
+  host.addEventListener('pointerdown', fromPointer);
+  host.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' || e.buttons || e.pressure > 0) fromPointer(e); });
+  host.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') setHover(null); });
+  host.addEventListener('keydown', e => {
+    const step = { ArrowLeft: -1, ArrowRight: 1, PageUp: 30, PageDown: -30 }[e.key];
+    const at = hover == null ? cur.length - 1 : hover;
+    if (step) setHover(at + step * (e.shiftKey ? 10 : 1));
+    else if (e.key === 'Home') setHover(0);
+    else if (e.key === 'End') setHover(cur.length - 1);
+    else if (e.key === 'Escape') setHover(null);
+    else return;
+    e.preventDefault();
+  });
+  host.addEventListener('blur', () => setHover(null));
+  if (window.ResizeObserver) new ResizeObserver(() => render()).observe(host);
+  return { render };
+}
+
+/* The same day as a table: one row per place visited. */
+function renderDayTable(table) {
+  const head = h('tr', null, ['Time', 'Place', 'Noise avg', 'Noise peak', 'Light avg', 'Temp avg'].map(t => h('th', { scope: 'col', text: t })));
+  const rows = daySegments(dayPoints()).map(seg => {
+    const avg = k => seg.pts.reduce((a, p) => a + p[k], 0) / seg.pts.length;
+    const peak = Math.max.apply(null, seg.pts.map(p => p.noise));
+    return h('tr', null,
+      h('td', { text: clock(seg.from) + '–' + clock(seg.to + 1) }),
+      h('td', { text: placeOf(seg.place).name }),
+      h('td', { text: fmtVal('noise', avg('noise')) }),
+      h('td', { text: fmtVal('noise', peak) }),
+      h('td', { text: fmtVal('light', avg('light')) }),
+      h('td', { text: fmtVal('temp', avg('temp')) }));
+  });
+  table.replaceChildren(h('thead', null, head), h('tbody', null, rows));
+}
+
+/* Share of the day's minutes with every watched measure inside the user's range. */
+function dayStats() {
+  let inside = 0;
+  const pts = dayPoints();
+  pts.forEach(p => { if (!METRIC_IDS.some(m => isOutside(m, p[m]))) inside++; });
+  const rated = log.filter(a => a.feedback === 'useful' || a.feedback === 'not');
+  return {
+    within: Math.round(inside / pts.length * 100),
+    alerts: log.length,
+    useful: rated.filter(a => a.feedback === 'useful').length,
+    rated: rated.length
+  };
+}
+
+/* ---- band3d.js ---- */
+/* The wristband in 3D (three.js r128): a strap, a case, and the parts inside it.
+   All sizes are millimetres. "Opened" lifts each part straight up out of the case. */
+function Band3D(host, opts) {
+  const T = window.THREE;
+  if (!T) return null;
+  const canvas = $('canvas', host), pinsEl = $('.pins', host), leaders = $('.leaders', host), ripples = $('.ripples', host);
+  let renderer;
+  try {
+    renderer = new T.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  } catch (err) {
+    return null;
+  }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputEncoding = T.sRGBEncoding;
+  renderer.toneMapping = T.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 0.8;
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new T.Scene();
+  const camera = new T.PerspectiveCamera(22, 1, 20, 1400);
+
+  /* A small photo studio rendered once into an environment map: this is what the plastic, glass and metal reflect. */
+  (function studio() {
+    const sc = new T.Scene();
+    const box = new T.BoxGeometry(1, 1, 1);
+    const room = new T.Mesh(box, new T.MeshStandardMaterial({ side: T.BackSide, color: 0xb4cbc8, roughness: 1, metalness: 0 }));
+    room.scale.set(32, 28, 32);
+    room.position.set(0, 13, 0);
+    sc.add(room);
+    const main = new T.PointLight(0xffffff, 3.6, 30, 2);
+    main.position.set(0.5, 16, 0.3);
+    sc.add(main);
+    const lamp = (power, sx, sy, sz, x, y, z, tint) => {
+      const mat = new T.MeshBasicMaterial({ color: tint || 0xffffff });
+      mat.color.multiplyScalar(power);
+      const mesh = new T.Mesh(box, mat);
+      mesh.scale.set(sx, sy, sz);
+      mesh.position.set(x, y, z);
+      sc.add(mesh);
+    };
+    lamp(46, 0.1, 9, 10, -15.9, 12, 2);
+    lamp(30, 0.1, 5, 12, 15.9, 9, -6);
+    lamp(24, 12, 0.1, 9, 0, 26.9, 2);
+    lamp(18, 9, 5, 0.1, 2, 9, 15.9, 0xdffaf6);
+    lamp(14, 6, 4, 0.1, -4, 14, -15.9);
+    const pm = new T.PMREMGenerator(renderer);
+    scene.environment = pm.fromScene(sc, 0.04).texture;
+    pm.dispose();
+  })();
+  const key = new T.DirectionalLight(0xffffff, 0.45);
+  key.position.set(-70, 130, 90);
+  scene.add(key);
+
+  /* ----- materials ----- */
+  const col = hex => new T.Color(hex).convertSRGBToLinear();
+  const std = (hex, rough, metal) => new T.MeshStandardMaterial({ color: col(hex), roughness: rough, metalness: metal || 0 });
+  const M = {
+    strap: std(0x0c9a8f, 0.64, 0),
+    strapHole: std(0x055f58, 0.9, 0),
+    shell: std(0x1d3a3f, 0.44, 0.12),
+    lid: std(0x1b3a40, 0.5, 0.1),
+    lens: new T.MeshPhysicalMaterial({ color: col(0x050d0d), roughness: 0.05, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.03 }),
+    hole: std(0x070c0c, 0.8, 0),
+    pcb: std(0x075650, 0.52, 0.1),
+    chip: std(0x15191b, 0.36, 0.2),
+    metal: std(0xcfd6d8, 0.24, 1),
+    gold: std(0xd8b159, 0.3, 1),
+    cell: std(0xaab5b9, 0.36, 0.8),
+    flex: std(0xd8843a, 0.55, 0),
+    ceramic: std(0xe9eef0, 0.5, 0),
+    cream: std(0xe6dcc2, 0.6, 0),
+    tan: std(0xb2976a, 0.55, 0),
+    button: std(0xe8744f, 0.4, 0.05)
+  };
+
+  /* ----- shapes ----- */
+  function rr(L, W, r) {
+    const s2 = new T.Shape(), x = -L / 2, y = -W / 2;
+    s2.moveTo(x + r, y);
+    s2.lineTo(x + L - r, y); s2.absarc(x + L - r, y + r, r, -Math.PI / 2, 0, false);
+    s2.lineTo(x + L, y + W - r); s2.absarc(x + L - r, y + W - r, r, 0, Math.PI / 2, false);
+    s2.lineTo(x + r, y + W); s2.absarc(x + r, y + W - r, r, Math.PI / 2, Math.PI, false);
+    s2.lineTo(x, y + r); s2.absarc(x + r, y + r, r, Math.PI, Math.PI * 1.5, false);
+    return s2;
+  }
+  /* A rounded slab lying flat: L along x, W along z, standing on y = 0 with height H. */
+  function slab(L, W, H, r, bevel) {
+    const b = Math.max(0, Math.min(bevel || 0, H / 2 - 0.02, r - 0.05));
+    const g = new T.ExtrudeGeometry(rr(L - 2 * b, W - 2 * b, r - b), {
+      depth: H - 2 * b, bevelEnabled: b > 0, bevelThickness: b, bevelSize: b, bevelSegments: 4, curveSegments: 14
+    });
+    g.rotateX(-Math.PI / 2);
+    g.translate(0, b, 0);
+    return g;
+  }
+  function canvasTexture(wpx, hpx, draw) {
+    const c = document.createElement('canvas');
+    c.width = wpx; c.height = hpx;
+    const tex = new T.CanvasTexture(c);
+    tex.encoding = T.sRGBEncoding;
+    tex.anisotropy = 4;
+    const paint = () => {
+      const g = c.getContext('2d');
+      g.clearRect(0, 0, wpx, hpx);
+      draw(g, wpx, hpx);
+      tex.needsUpdate = true;
+    };
+    paint();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(paint, () => {});
+    return tex;
+  }
+  function spaced(g, str, cx, cy, track) {
+    const ws = str.split('').map(ch => g.measureText(ch).width);
+    let x = cx - (ws.reduce((a, b) => a + b, 0) + track * (str.length - 1)) / 2;
+    g.textAlign = 'left';
+    str.split('').forEach((ch, i) => { g.fillText(ch, x, cy); x += ws[i] + track; });
+  }
+
+  /* ----- parts ----- */
+  const root = new T.Group();
+  scene.add(root);
+  const P = {};
+  const def = (id, lx, ly, lz) => {
+    const g = new T.Group();
+    root.add(g);
+    P[id] = { g, lift: new T.Vector3(lx, ly, lz), mats: [] };
+  };
+  def('case', 0, 0, 0); def('battery', 0, 6.5, 0); def('motor', 0, 6.5, 0); def('board', 0, 16.5, 0);
+  def('temp', 0, 19.5, 0); def('light', 0, 19.5, 0); def('mic', 0, 19.5, 0); def('cover', 0, 31, 0); def('button', 0, 0, 7.5);
+  /* Adds a mesh to a part's group. `owner` is the part it lights up with and is picked as (the lens on the cover belongs to the light sensor). */
+  function put(id, geo, mat, x, y, z, owner) {
+    const m = mat.clone();
+    const mesh = new T.Mesh(geo, m);
+    mesh.position.set(x, y, z);
+    mesh.userData.part = owner || id;
+    P[id].g.add(mesh);
+    P[owner || id].mats.push(m);
+    return mesh;
+  }
+  const boxG = (a, b, c) => new T.BoxGeometry(a, b, c);
+  const cylG = (r, hgt, seg) => new T.CylinderGeometry(r, r, hgt, seg || 32);
+
+  // strap: a band extruded along a wrist-shaped line, its ends tucked into the case
+  (function strap() {
+    const half = [[-21.5, 3.2], [-25.5, 2.9], [-29.2, 0.4], [-31.3, -5], [-32, -13], [-31.4, -23], [-28.5, -32.5], [-22.5, -40], [-13, -44.6], [0, -46.2]];
+    const pts = half.concat(half.slice(0, -1).reverse().map(p => [-p[0], p[1]])).map(p => new T.Vector2(p[0], p[1]));
+    const line = new T.SplineCurve(pts).getSpacedPoints(160);
+    const a = [], b = [];
+    line.forEach((p, i) => {
+      const q0 = line[Math.max(0, i - 1)], q1 = line[Math.min(line.length - 1, i + 1)];
+      const tx = q1.x - q0.x, ty = q1.y - q0.y, len = Math.hypot(tx, ty) || 1;
+      const nx = -ty / len * 0.8, ny = tx / len * 0.8;
+      a.push(new T.Vector2(p.x + nx, p.y + ny));
+      b.push(new T.Vector2(p.x - nx, p.y - ny));
+    });
+    const g = new T.ExtrudeGeometry(new T.Shape(a.concat(b.reverse())), {
+      depth: 17.4, bevelEnabled: true, bevelThickness: 0.8, bevelSize: 0.55, bevelSegments: 3, curveSegments: 1
+    });
+    g.translate(0, 0, -8.7);
+    put('case', g, M.strap, 0, 0, 0);
+
+    // a pin-and-tuck closure: a row of holes and one metal stud on the outside of the strap
+    const outward = i => {
+      const q0 = line[Math.max(0, i - 1)], q1 = line[Math.min(line.length - 1, i + 1)];
+      const tx = q1.x - q0.x, ty = q1.y - q0.y, len = Math.hypot(tx, ty) || 1;
+      return { x: ty / len, y: -tx / len };
+    };
+    const onStrap = (i, geo, mat, off) => {
+      const n = outward(i), p = line[i];
+      const mesh = put('case', geo, mat, p.x + n.x * off, p.y + n.y * off, 0);
+      mesh.rotation.z = Math.atan2(n.y, n.x) - Math.PI / 2;
+    };
+    for (let i = 120; i <= 148; i += 4) onStrap(i, cylG(1.05, 0.5, 20), M.strapHole, 1.16);
+    onStrap(114, cylG(1.7, 0.9, 28), M.metal, 1.6);
+  })();
+
+  // case: a floor and a wall, open at the top
+  const CL = 46, CW = 27, CR = 8, WALL = 1.7, TRAY = 7.2;
+  put('case', slab(CL - 0.4, CW - 0.4, 1.5, CR, 0.4), M.shell, 0, 0, 0);
+  (function wall() {
+    const sh = rr(CL - 0.6, CW - 0.6, CR - 0.3);
+    sh.holes.push(rr(CL - 2 * WALL, CW - 2 * WALL, CR - WALL));
+    const g = new T.ExtrudeGeometry(sh, { depth: TRAY - 0.6, bevelEnabled: true, bevelThickness: 0.3, bevelSize: 0.3, bevelSegments: 2, curveSegments: 14 });
+    g.rotateX(-Math.PI / 2);
+    g.translate(0, 0.3, 0);
+    put('case', g, M.shell, 0, 0, 0);
+  })();
+
+  // battery, with a printed label
+  put('battery', slab(23, 17, 3.4, 2.4, 0.7), M.cell, -8.3, 1.7, 0);
+  (function label() {
+    const tex = canvasTexture(420, 264, (g, w, hgt) => {
+      g.fillStyle = '#0e3d40';
+      g.fillRect(0, 0, w, hgt);
+      g.fillStyle = '#39d3c6';
+      g.font = '700 44px Unbounded, Lexend, sans-serif';
+      g.textBaseline = 'middle';
+      spaced(g, 'SENSE', w / 2, 92, 8);
+      g.fillStyle = 'rgba(214, 240, 237, .82)';
+      g.font = '500 25px "IBM Plex Mono", monospace';
+      g.textAlign = 'center';
+      g.fillText('Li-Po rechargeable cell', w / 2, 160);
+      g.font = '500 34px "IBM Plex Mono", monospace';
+      g.fillText('+', 34, 222);
+      g.fillText('−', w - 34, 222);
+    });
+    const geo = new T.PlaneGeometry(17.4, 10.9);
+    geo.rotateX(-Math.PI / 2);
+    const mat = new T.MeshStandardMaterial({ map: tex, roughness: 0.62, metalness: 0 });
+    put('battery', geo, mat, -8.3, 5.13, 0);
+  })();
+  put('battery', boxG(1.6, 0.5, 5), M.gold, 3.9, 3.1, 0);
+
+  // vibration motor: a coin with a flex cable
+  put('motor', cylG(4.7, 3, 48), M.metal, 13.4, 3.2, -2.4);
+  put('motor', cylG(3.3, 0.12, 40), M.chip, 13.4, 4.76, -2.4);
+  put('motor', boxG(2.4, 0.2, 7), M.flex, 13.4, 1.85, 4.3);
+
+  // main board and what is soldered to it
+  const BY = 6.2;                                               // top face of the board
+  put('board', slab(41.4, 22.4, 0.9, 6.6, 0), M.pcb, 0, 5.3, 0);
+  put('board', boxG(6.4, 0.9, 6.4), M.chip, 3, BY + 0.45, -1.6);                 // processor with Bluetooth
+  put('board', boxG(9.6, 1.3, 7.2), M.metal, -8.6, BY + 0.65, -3.3);             // radio shield
+  put('board', boxG(5.2, 0.9, 1.5), M.ceramic, -16.9, BY + 0.45, -2);            // antenna
+  put('board', boxG(3.6, 1.5, 2.6), M.metal, 7, BY + 0.75, 9.7);                 // switch behind the side button
+  put('board', boxG(3, 0.8, 1.7), M.metal, 10.2, BY + 0.4, -7.6);                // crystal
+  put('board', boxG(4.2, 1.2, 2.1), M.cream, -3.5, BY + 0.6, 8.6);               // battery connector
+  [[-1.5, 4.2, 0], [0.4, 4.2, 0], [8.4, 2.6, 1], [8.4, 0.8, 1], [9.8, -3.2, 0], [-2.4, -6.6, 0], [-0.4, -6.6, 0], [3.4, 5.4, 1], [12.8, -1.4, 1], [-14.6, 2.4, 0], [5.6, -7, 0], [-9, 3.4, 1]]
+    .forEach((q, i) => put('board', q[2] ? boxG(0.6, 0.5, 1.1) : boxG(1.1, 0.5, 0.6), i % 3 ? M.tan : M.chip, q[0], BY + 0.25, q[1]));
+  [[-18.3, -5.4], [-16.6, -6.6], [18.6, 1.2], [18.6, -0.6]].forEach(q => put('board', cylG(0.55, 0.06, 16), M.gold, q[0], BY + 0.03, q[1]));
+
+  // the three sensors
+  put('light', boxG(2.6, 0.75, 2.6), M.chip, -13.5, BY + 0.375, 4.6);
+  put('light', boxG(1.3, 0.06, 1.3), M.ceramic, -13.5, BY + 0.78, 4.6);
+  put('mic', boxG(3.7, 1.05, 2.9), M.metal, 15.3, BY + 0.525, 5.2);
+  put('mic', cylG(0.45, 0.06, 16), M.hole, 15.3, BY + 1.06, 5.2);
+  put('temp', boxG(2.3, 0.7, 2.3), M.ceramic, 16.4, BY + 0.35, -5.8);
+  put('temp', boxG(1.1, 0.06, 1.1), M.gold, 16.4, BY + 0.71, -5.8);
+
+  // cover, with the light window, the sound port and the name
+  const TOP = TRAY + 2.3;
+  put('cover', slab(CL, CW, 2.3, CR, 0.9), M.lid, 0, TRAY, 0);
+  put('cover', cylG(2.3, 0.16, 48), M.lens, -13.5, TOP + 0.02, 4.6, 'light');
+  (function ring() {
+    const g = new T.TorusGeometry(2.42, 0.13, 10, 48);
+    g.rotateX(Math.PI / 2);
+    put('cover', g, M.metal, -13.5, TOP + 0.03, 4.6, 'light');
+  })();
+  [14.1, 15.3, 16.5].forEach(x => put('cover', cylG(0.42, 0.08, 16), M.hole, x, TOP, 5.2, 'mic'));
+  (function name() {
+    const tex = canvasTexture(512, 128, (g, w, hgt) => {
+      g.fillStyle = 'rgba(196, 238, 233, .5)';
+      g.font = '700 70px Unbounded, Lexend, sans-serif';
+      g.textBaseline = 'middle';
+      spaced(g, 'SENSE', w / 2, hgt / 2 + 4, 16);
+    });
+    const geo = new T.PlaneGeometry(15, 3.75);
+    geo.rotateX(-Math.PI / 2);
+    const mesh = new T.Mesh(geo, new T.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false }));
+    mesh.position.set(1.5, TOP + 0.015, -2.6);
+    mesh.userData.part = 'cover';
+    P.cover.g.add(mesh);
+  })();
+
+  // side button
+  (function button() {
+    const g = slab(9.5, 2.7, 1.5, 1.2, 0.45);
+    g.rotateX(Math.PI / 2);
+    put('button', g, M.button, 7, 3.9, CW / 2 - 0.35);
+  })();
+
+  // a soft contact shadow under the strap, and a halo that marks the selected small part
+  const shadow = (function () {
+    const tex = canvasTexture(256, 256, (g, w, hgt) => {
+      const grad = g.createRadialGradient(w / 2, hgt / 2, 0, w / 2, hgt / 2, w / 2);
+      grad.addColorStop(0, 'rgba(0, 22, 24, 1)');
+      grad.addColorStop(0.55, 'rgba(0, 22, 24, .42)');
+      grad.addColorStop(1, 'rgba(0, 22, 24, 0)');
+      g.fillStyle = grad;
+      g.fillRect(0, 0, w, hgt);
+    });
+    const geo = new T.PlaneGeometry(150, 84);
+    geo.rotateX(-Math.PI / 2);
+    const mesh = new T.Mesh(geo, new T.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, toneMapped: false, opacity: 0.22 }));
+    mesh.position.set(0, -48.6, 0);
+    scene.add(mesh);
+    return mesh;
+  })();
+  const halo = (function () {
+    const tex = canvasTexture(128, 128, (g, w, hgt) => {
+      const grad = g.createRadialGradient(w / 2, hgt / 2, 0, w / 2, hgt / 2, w / 2);
+      grad.addColorStop(0, 'rgba(255, 255, 255, 0)');
+      grad.addColorStop(0.42, 'rgba(255, 255, 255, 0)');
+      grad.addColorStop(0.62, 'rgba(255, 255, 255, .9)');
+      grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      g.fillStyle = grad;
+      g.fillRect(0, 0, w, hgt);
+    });
+    const sp = new T.Sprite(new T.SpriteMaterial({ map: tex, color: col(0x2ed1c3), transparent: true, depthTest: false, depthWrite: false, toneMapped: false }));
+    sp.visible = false;
+    sp.renderOrder = 5;
+    scene.add(sp);
+    return sp;
+  })();
+  const HALO = { light: 9, mic: 9, temp: 9, button: 14, motor: 16 };
+
+  /* ----- where each numbered pin points: on the closed band, and on the opened one ----- */
+  const A = {
+    cover: [{ p: [15, TOP, -8.5], g: 'cover' }],
+    light: [{ p: [-13.5, TOP + 0.1, 4.6], g: 'cover' }, { p: [-13.5, BY + 0.8, 4.6], g: 'light' }],
+    mic: [{ p: [15.3, TOP + 0.1, 5.2], g: 'cover' }, { p: [15.3, BY + 1.1, 5.2], g: 'mic' }],
+    temp: [null, { p: [16.4, BY + 0.7, -5.8], g: 'temp' }],
+    board: [null, { p: [3, BY + 0.9, -1.6], g: 'board' }],
+    motor: [null, { p: [13.4, 4.8, -2.4], g: 'motor' }],
+    battery: [null, { p: [-8.3, 5.1, 0], g: 'battery' }],
+    button: [{ p: [7, 3.9, CW / 2 + 1.1], g: 'button' }],
+    case: [{ p: [-31.6, -14, 4], g: 'case' }, { p: [-22.8, 3.6, 3], g: 'case' }]
+  };
+  const tmpA = new T.Vector3(), tmpB = new T.Vector3(), tmpC = new T.Vector3();
+  function anchor(id, e, out) {
+    const a = A[id], c = a[0], o = a[1] || a[0];
+    const at = (d, v) => v.set(d.p[0], d.p[1], d.p[2]).addScaledVector(P[d.g].lift, e);
+    if (!c || o === c) return at(o, out);
+    at(c, out);
+    at(o, tmpB);
+    return out.lerp(tmpB, smooth(0.25, 0.85, e));
+  }
+  /* How closely the camera frames a selected part (radius in mm). */
+  const FOCUS = { cover: 30, light: 20, mic: 20, temp: 20, board: 27, motor: 21, battery: 23, button: 21 };
+
+  /* ----- numbered pins over the canvas ----- */
+  const pins = {};
+  PARTS.forEach(p => {
+    const el = h('button', { class: 'pin', type: 'button', 'aria-label': p.n + ', ' + p.name, text: String(p.n), onclick: () => opts.onPick(p.id) });
+    const line = s('line', {}), dot = s('circle', { r: 2.2 });
+    leaders.append(line, dot);
+    pinsEl.append(el);
+    pins[p.id] = { el, line, dot, side: 0 };
+  });
+
+  /* ----- camera ----- */
+  const view = { yaw: 0.62, pitch: 0.36, r: 45, x: 0, y: -16, z: 0 };
+  const goal = { yaw: 0.62, pitch: 0.36, r: 45, x: 0, y: -16, z: 0 };
+  let open = 0, openGoal = 0, selected = null, sway = 1, dragging = false, lastT = 0, w = 0, hh = 0, compact = false, buzz = null, started = false;
+
+  function retarget() {
+    const e = openGoal;
+    // on the workbench a title sits over the top-left corner, so the band is framed a little looser there
+    const roomy = !!host.closest('.slot-band');
+    if (selected && FOCUS[selected]) {
+      anchor(selected, e, tmpC);
+      // closed, the part is a detail on the case, so stay further back; opened, move in on the part itself
+      goal.x = tmpC.x * 0.55; goal.z = tmpC.z * 0.55;
+      goal.y = e ? tmpC.y : tmpC.y - 9;
+      goal.r = e ? FOCUS[selected] : Math.max(FOCUS[selected], roomy ? 33 : 29);
+    } else {
+      goal.x = 0; goal.z = 0;
+      goal.y = e ? (roomy ? 19 : 17.5) : (roomy ? -16 : -18);
+      goal.r = e ? (roomy ? 36 : 32) : (roomy ? 45 : 39);
+    }
+  }
+  function fit(r) {
+    const vf = camera.fov * Math.PI / 180;
+    const hf = 2 * Math.atan(Math.tan(vf / 2) * camera.aspect);
+    return r * (compact ? 1.1 : 1) / Math.sin(Math.min(vf, hf) / 2);
+  }
+  function toScreen(v) {
+    v.project(camera);
+    v.x = (v.x + 1) / 2 * w;
+    v.y = (1 - v.y) / 2 * hh;
+    return v;
+  }
+
+  function layoutPins() {
+    const e = open, cx = w / 2;
+    // the outline of the band on screen, so the two columns of pins sit just outside it
+    let minX = Infinity, maxX = -Infinity;
+    const lift = P.cover.lift.y * e, sx = lerp(33.5, 23, e);
+    [[-23, 0, -13.5], [23, 0, -13.5], [-23, 0, 13.5], [23, 0, 13.5], [-23, TOP + lift, -13.5], [23, TOP + lift, -13.5], [-23, TOP + lift, 13.5], [23, TOP + lift, 13.5], [-sx, -12, 0], [sx, -12, 0]]
+      .forEach(c => { toScreen(tmpA.set(c[0], c[1], c[2])); minX = Math.min(minX, tmpA.x); maxX = Math.max(maxX, tmpA.x); });
+    const gapPx = compact ? 20 : 30;
+    const leftX = clamp(minX - gapPx, 20, cx - 44), rightX = clamp(maxX + gapPx, cx + 44, w - 20);
+
+    const items = [];
+    PARTS.forEach(p => {
+      const pin = pins[p.id];
+      const alpha = INTERNAL[p.id] ? smooth(0.5, 0.9, e) : 1;
+      toScreen(anchor(p.id, e, tmpA));
+      const inside = tmpA.z < 1 && tmpA.x > -10 && tmpA.x < w + 10 && tmpA.y > 6 && tmpA.y < hh - 6;
+      if (alpha < 0.03 || !inside) {
+        pin.el.style.opacity = 0; pin.el.style.pointerEvents = 'none';
+        pin.line.style.opacity = 0; pin.dot.style.opacity = 0;
+        return;
+      }
+      const dx = tmpA.x - cx;
+      if (dx > 12) pin.side = 1; else if (dx < -12) pin.side = -1; else if (!pin.side) pin.side = 1;
+      items.push({ pin, ax: tmpA.x, ay: tmpA.y, side: pin.side, alpha });
+    });
+    const topY = compact ? 62 : 80, botY = hh - 34, gapY = 34;
+    [-1, 1].forEach(side => {
+      const colItems = items.filter(i => i.side === side).sort((a, b) => a.ay - b.ay);
+      let prev = topY - gapY;
+      colItems.forEach(it => { it.py = Math.max(it.ay, prev + gapY); prev = it.py; });
+      let next = botY;
+      for (let i = colItems.length - 1; i >= 0; i--) { colItems[i].py = Math.min(colItems[i].py, next); next = colItems[i].py - gapY; }
+      const x = side < 0 ? leftX : rightX;
+      colItems.forEach(it => {
+        const pin = it.pin;
+        pin.el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + it.py.toFixed(1) + 'px)';
+        pin.el.style.opacity = it.alpha; pin.el.style.pointerEvents = it.alpha > 0.5 ? 'auto' : 'none';
+        pin.line.setAttribute('x1', it.ax); pin.line.setAttribute('y1', it.ay);
+        pin.line.setAttribute('x2', x - side * 14); pin.line.setAttribute('y2', it.py);
+        pin.dot.setAttribute('cx', it.ax); pin.dot.setAttribute('cy', it.ay);
+        pin.line.style.opacity = it.alpha * 0.75; pin.dot.style.opacity = it.alpha;
+      });
+    });
+  }
+
+  function ripple() {
+    toScreen(tmpA.set(0, 6, 0));
+    const r = h('i', { class: 'ripple' });
+    r.style.left = tmpA.x + 'px';
+    r.style.top = tmpA.y + 'px';
+    ripples.append(r);
+    setTimeout(() => r.remove(), 1100);
+  }
+
+  const glow = col(0x2ed1c3);
+  function frame(t) {
+    requestAnimationFrame(frame);
+    if (!w || !host.offsetWidth) return;
+    const dt = Math.min(0.5, Math.max(0.001, (t - lastT) / 1000));   // long gaps (a throttled tab) simply land on the target
+    lastT = t;
+    const still = REDUCE.matches;
+    const k = still ? 1 : 1 - Math.exp(-dt * 6.5);
+
+    open += (openGoal - open) * (still ? 1 : 1 - Math.exp(-dt * 5.2));
+    if (Math.abs(openGoal - open) < 0.0005) open = openGoal;
+    for (const id in P) P[id].g.position.copy(P[id].lift).multiplyScalar(open);
+
+    ['yaw', 'pitch', 'r', 'x', 'y', 'z'].forEach(a => { view[a] += (goal[a] - view[a]) * k; });
+    sway += ((still || dragging ? 0 : selected ? 0.35 : 1) - sway) * (1 - Math.exp(-dt * 2));
+    const yaw = view.yaw + Math.sin(t / 1000 * 0.42) * 0.15 * sway;
+    const dist = fit(view.r), cp = Math.cos(view.pitch);
+    camera.position.set(view.x + dist * cp * Math.sin(yaw), view.y + dist * Math.sin(view.pitch), view.z + dist * cp * Math.cos(yaw));
+    camera.lookAt(view.x, view.y, view.z);
+
+    // vibration: short bursts, as the motor would give
+    if (buzz) {
+      const el = t - buzz.t0;
+      if (el >= buzz.total) { buzz = null; root.position.set(0, 0, 0); }
+      else {
+        let acc = 0, idx = -1;
+        for (let i = 0; i < buzz.seq.length; i++) { if (el < acc + buzz.seq[i]) { idx = i; break; } acc += buzz.seq[i]; }
+        if (idx % 2 === 0) {
+          if (idx !== buzz.fired) { buzz.fired = idx; ripple(); }
+          if (!still) root.position.set(Math.sin(el * 0.19) * buzz.amp, 0, Math.cos(el * 0.23) * buzz.amp * 0.6);
+        } else root.position.set(0, 0, 0);
+      }
+    }
+
+    // the selected part glows softly
+    const pulse = 0.2 + 0.1 * Math.sin(t / 280);
+    for (const id in P) {
+      const kk = id === selected ? pulse * (id === 'case' || id === 'cover' ? 0.5 : 1) : 0;
+      P[id].mats.forEach(m => { if (m.emissive) m.emissive.copy(glow).multiplyScalar(kk); });
+    }
+    if (selected && HALO[selected]) {
+      anchor(selected, open, halo.position);
+      halo.scale.setScalar(HALO[selected] * (1 + 0.06 * Math.sin(t / 280)));
+      halo.material.opacity = 0.75;
+      halo.visible = true;
+    } else halo.visible = false;
+
+    renderer.render(scene, camera);
+    layoutPins();
+    if (!started) { started = true; if (opts.onReady) opts.onReady(); }
+  }
+
+  /* ----- turning it and picking parts ----- */
+  let down = null;
+  canvas.addEventListener('pointerdown', e => {
+    if (e.button) return;
+    down = { x: e.clientX, y: e.clientY, yaw: goal.yaw, pitch: goal.pitch, moved: 0, id: e.pointerId, touch: e.pointerType === 'touch' };
+    try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* pointer already released */ }
+  });
+  canvas.addEventListener('pointermove', e => {
+    if (!down || e.pointerId !== down.id) return;
+    const dx = e.clientX - down.x, dy = e.clientY - down.y;
+    down.moved = Math.max(down.moved, Math.abs(dx) + Math.abs(dy));
+    if (down.moved <= 5) return;
+    dragging = true;
+    host.classList.add('is-drag');
+    goal.yaw = down.yaw - dx * 0.009;
+    if (!down.touch) goal.pitch = clamp(down.pitch + dy * 0.006, 0.08, 1.2);
+  });
+  const ray = new T.Raycaster(), ndc = new T.Vector2();
+  function release(e) {
+    if (!down) return;
+    const click = down.moved <= 5 && e.type === 'pointerup';
+    down = null; dragging = false;
+    host.classList.remove('is-drag');
+    if (!click) return;
+    const box = canvas.getBoundingClientRect();
+    ndc.set((e.clientX - box.left) / box.width * 2 - 1, -((e.clientY - box.top) / box.height) * 2 + 1);
+    ray.setFromCamera(ndc, camera);
+    const hit = ray.intersectObjects(root.children, true)[0];
+    if (hit && hit.object.userData.part) opts.onPick(hit.object.userData.part);
+  }
+  canvas.addEventListener('pointerup', release);
+  canvas.addEventListener('pointercancel', release);
+  canvas.tabIndex = 0;
+  canvas.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') goal.yaw += 0.25;
+    else if (e.key === 'ArrowRight') goal.yaw -= 0.25;
+    else if (e.key === 'ArrowUp') goal.pitch = clamp(goal.pitch + 0.12, 0.08, 1.2);
+    else if (e.key === 'ArrowDown') goal.pitch = clamp(goal.pitch - 0.12, 0.08, 1.2);
+    else return;
+    e.preventDefault();
+  });
+
+  function resize() {
+    const nw = Math.round(host.clientWidth), nh = Math.round(host.clientHeight);
+    if (!nw || !nh || (nw === w && nh === hh)) return;
+    w = nw; hh = nh;
+    renderer.setSize(w, hh, false);
+    camera.aspect = w / hh;
+    camera.updateProjectionMatrix();
+    compact = w < 470;
+    host.classList.toggle('is-compact', compact);
+    retarget();
+  }
+  if (window.ResizeObserver) new ResizeObserver(resize).observe(host);
+  window.addEventListener('resize', resize);
+  resize();
+  retarget();
+  Object.assign(view, goal);
+  requestAnimationFrame(frame);
+
+  const PATTERNS = {
+    gentle: { seq: [170, 150, 170], amp: 0.22 },
+    medium: { seq: [240, 120, 240, 120, 240], amp: 0.36 },
+    strong: { seq: [800], amp: 0.55 }
+  };
+  return {
+    setOpen(v) {
+      openGoal = v ? 1 : 0;
+      goal.pitch = v ? 0.5 : 0.36;
+      retarget();
+    },
+    select(id) { selected = id; retarget(); },
+    vibrate(level) {
+      const p = PATTERNS[level] || PATTERNS.gentle;
+      buzz = { t0: performance.now(), seq: p.seq, amp: p.amp, total: p.seq.reduce((a, b) => a + b, 0), fired: -1 };
+      return buzz.total;
+    },
+    theme(dark) { shadow.material.opacity = dark ? 0.5 : 0.22; },
+    resize() { resize(); retarget(); }
+  };
+}
+
+/* ---- app.js ---- */
+/* Wires the screens to the simulation. */
+$$('[data-ic]').forEach(n => {
+  n.classList.add('ic');
+  n.setAttribute('aria-hidden', 'true');
+  n.innerHTML = iconSvg(n.dataset.ic);
+});
+
+let band = null, tab = 'now', selectedPart = null, bandOpen = false;
+
+/* ----- layout: the band, the room and the five steps sit on the workbench on a wide screen, inside the app on a phone ----- */
+const DESK = window.matchMedia('(min-width: 1100px) and (min-height: 600px)');
+function placeBlocks() {
+  const d = DESK.matches;
+  $(d ? '#bandSlotDesk' : '#bandSlotMob').append($('#bandView'));
+  $(d ? '#roomSlotDesk' : '#roomSlotMob').append($('#roomPanel'));
+  $(d ? '#journeySlotDesk' : '#journeySlotMob').append($('#journey'));
+  if (band) band.resize();
+}
+placeBlocks();
+if (DESK.addEventListener) DESK.addEventListener('change', placeBlocks); else DESK.addListener(placeBlocks);
+
+/* ----- toast ----- */
+let toastTimer = 0;
+function toast(text) {
+  const el = $('#toast');
+  el.textContent = text;
+  el.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.hidden = true; }, 3400);
+}
+
+/* ----- tabs ----- */
+function showTab(id) {
+  tab = id;
+  $$('.view').forEach(v => { v.hidden = v.id !== 'view-' + id; });
+  $$('.tab').forEach(b => { if (b.dataset.tab === id) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+  $('#views').scrollTop = 0;
+  if (id === 'today') renderToday();
+  if (id === 'band' && band) band.resize();
+}
+$$('.tab').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+$('#bandChip').addEventListener('click', () => showTab('band'));
+
+/* ----- the simulated room ----- */
+const placesEl = $('#places');
+PLACES.forEach(p => placesEl.append(
+  h('button', { class: 'place', type: 'button', 'data-place': p.id, 'aria-pressed': 'false', onclick: () => setPlace(p.id) }, icon(p.icon), h('span', { text: p.name }))
+));
+const roomSliders = {
+  noise: Slider($('#roomNoise'), { min: 30, max: 100, step: 1, values: [sim.room.noise], labels: ['Noise in the room'], text: v => v + ' dB(A)', onInput: v => setRoom('noise', v[0]) }),
+  light: Slider($('#roomLight'), { min: 50, max: 20000, log: true, snap: niceLux, values: [sim.room.light], labels: ['Light in the room'], text: v => showLux(v) + ' lux', onInput: v => setRoom('light', v[0]) }),
+  temp: Slider($('#roomTemp'), { min: 5, max: 35, step: 0.5, values: [sim.room.temp], labels: ['Temperature in the room'], text: v => v + ' °C', onInput: v => setRoom('temp', v[0]) })
+};
+function renderRoom() {
+  const r = sim.room;
+  $$('.place', placesEl).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.place === r.place)));
+  $('#roomNoiseOut').textContent = Math.round(r.noise) + ' dB(A)';
+  $('#roomLightOut').textContent = showLux(r.light) + ' lx';
+  $('#roomTempOut').textContent = r.temp.toFixed(1) + ' °C';
+  roomSliders.noise.set([r.noise]);
+  roomSliders.light.set([r.light]);
+  roomSliders.temp.set([r.temp]);
+  const note = $('#roomNote');
+  note.hidden = !r.note;
+  note.textContent = r.note;
+  $('#heroPlace').textContent = placeOf(r.place).name;
+}
+$('#burstBtn').addEventListener('click', suddenSound);
+$('#burstBtn2').addEventListener('click', suddenSound);
+$('#roomMore').addEventListener('click', () => {
+  const open = $('#roomPanel').classList.toggle('is-open');
+  $('#roomMore').setAttribute('aria-expanded', String(open));
+  $('#roomMore').textContent = open ? 'Done' : 'Adjust';
+});
+
+/* ----- now: the status line and the three readings ----- */
+const cardRefs = {};
+METRIC_IDS.forEach(m => {
+  const M = METRICS[m];
+  const val = h('span', { class: 'card-val' }), like = h('span', { class: 'card-like' }), state = h('span', { class: 'state' }), sparkEl = h('div', { class: 'spark' });
+  $('#cards').append(h('article', { class: 'card' },
+    h('div', { class: 'card-top' }, h('span', { class: 'card-name' }, icon(M.icon), M.name), state),
+    h('div', { class: 'card-read' }, val, h('span', { class: 'unit', text: M.unit }), like),
+    sparkEl));
+  cardRefs[m] = { val, like, state, spark: Spark(sparkEl, m) };
+});
+const STATE_UI = {
+  off: ['off', 'off', () => 'Not watched'],
+  in: ['in', 'check', m => m === 'temp' ? 'Within your range' : 'Within your limit'],
+  over: ['over', 'up', () => 'Above your limit'],
+  warm: ['over', 'up', () => 'Above your range'],
+  cool: ['over', 'down', () => 'Below your range']
+};
+function renderCards() {
+  METRIC_IDS.forEach(m => {
+    const r = cardRefs[m], v = sim.val[m], st = sim.st[m];
+    r.val.textContent = METRICS[m].show(v);
+    const like = likeText(m, v);
+    if (r.likeText !== like) { r.likeText = like; r.like.textContent = like; }
+    const key = !profile.watch[m] ? 'off' : st.over ? st.kind : 'in';
+    if (r.key !== key) {
+      r.key = key;
+      const ui = STATE_UI[key];
+      r.state.dataset.s = ui[0];
+      r.state.replaceChildren(icon(ui[1]), h('span', { text: ui[2](m) }));
+    }
+  });
+}
+function listNames(ids) {
+  const names = ids.map(m => METRICS[m].name.toLowerCase());
+  const str = names.length > 1 ? names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1] : names[0];
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+const heroRefs = { hero: $('#hero'), title: $('#heroTitle'), sub: $('#heroSub'), bar: $('#heroBar'), act: $('#heroAct') };
+let heroAct = null;
+heroRefs.act.addEventListener('click', () => { if (heroAct) heroAct(); });
+function renderHero() {
+  const t = ms(), f = sim.flow, R = heroRefs;
+  const until = at => clock(simMinute() + (at - t) / 60000);
+  const out = METRIC_IDS.filter(m => sim.st[m].over);
+  let state = 'calm', title, sub, bar = null, act = null;
+  if (f && !f.choice) {
+    state = 'over'; title = alertTitle(f.metric, f.kind); sub = 'Choose what you want to do.';
+  } else if (sim.breakUntil > t) {
+    state = 'rest'; title = 'You are taking a break'; sub = 'Alerts are paused until ' + until(sim.breakUntil) + '. The band keeps measuring.';
+    act = ['End the break', resumeAlerts];
+  } else if (sim.pausedUntil > t) {
+    state = 'rest'; title = 'Alerts are paused'; sub = 'Until ' + until(sim.pausedUntil) + '. The band keeps measuring.';
+    act = ['Resume alerts', resumeAlerts];
+  } else if (out.length) {
+    const pend = pendingAlert(), m = pend ? pend.metric : out[0];
+    state = 'over'; title = alertTitle(m, sim.st[m].kind);
+    if (!alertsOn()) sub = 'Alerts are switched off, so the band stays quiet.';
+    else if (pend) { sub = 'Alert in ' + Math.max(1, Math.ceil(pend.left)) + ' s unless it settles.'; bar = clamp(1 - pend.left / pend.total, 0, 1); }
+    else sub = 'You have been told once. No repeat until it settles and rises again.';
+  } else {
+    const on = METRIC_IDS.filter(m => profile.watch[m]);
+    title = on.length ? 'Everything is within your limits' : 'Nothing is being watched';
+    sub = on.length ? listNames(on) + (on.length === 1 ? ' is' : ' are') + ' checked against your profile.' : 'Switch a measure on in your profile.';
+  }
+  if (R.hero.dataset.state !== state) R.hero.dataset.state = state;
+  if (R.title.textContent !== title) R.title.textContent = title;
+  if (R.sub.textContent !== sub) R.sub.textContent = sub;
+  R.bar.hidden = bar == null;
+  if (bar != null) R.bar.firstElementChild.style.width = (bar * 100).toFixed(1) + '%';
+  heroAct = act ? act[1] : null;
+  R.act.hidden = !act;
+  if (act && R.act.textContent !== act[0]) R.act.textContent = act[0];
+}
+
+/* ----- how it works: the five steps, lit as they happen ----- */
+const stepRefs = JOURNEY.map((j, i) => {
+  const cap = h('span', { class: 'jc', text: j.d });
+  const li = h('li', { class: 'jstep' }, h('span', { class: 'jn', text: pad2(i + 1) }), h('span', { class: 'jl', text: j.k }), cap);
+  $('#journeySteps').append(li);
+  return { li, cap, text: j.d };
+});
+function overBy(m) {
+  const st = sim.st[m], v = sim.val[m];
+  if (m === 'noise') return 'Noise is ' + Math.max(1, Math.round(v - st.limit)) + NB + 'dB over your limit';
+  if (m === 'light') return 'Light is ' + showLux(Math.max(1, v - st.limit)) + NB + 'lx over your limit';
+  return Math.max(0.1, Math.abs(v - st.limit)).toFixed(1) + NB + '°C ' + (st.kind === 'warm' ? 'above' : 'below') + ' your range';
+}
+function stepCaption(i, active) {
+  const f = sim.flow;
+  if (i === 0) return fmtVal('noise', sim.val.noise) + ' · ' + fmtVal('light', sim.val.light) + ' · ' + fmtVal('temp', sim.val.temp);
+  if (!active) return JOURNEY[i].d;
+  if (i === 1) { const p = pendingAlert(); return p ? overBy(p.metric) : JOURNEY[i].d; }
+  if (i === 2) return profile.vib ? profile.vibLevel.charAt(0).toUpperCase() + profile.vibLevel.slice(1) + ' vibration on the band' : 'A message on the phone';
+  if (i === 3) return 'Waiting for your choice';
+  return f && f.stage === 'learn' ? 'Offering a profile change' : 'Asking if it was useful';
+}
+function renderJourney() {
+  const step = journeyStep(), inFlow = !!sim.flow;
+  stepRefs.forEach((r, i) => {
+    r.li.classList.toggle('is-on', i === step);
+    r.li.classList.toggle('is-done', inFlow && i < step);
+    if (i === step) r.li.setAttribute('aria-current', 'step'); else r.li.removeAttribute('aria-current');
+    const text = stepCaption(i, i === step);
+    if (r.text !== text) { r.text = text; r.cap.textContent = text; }
+  });
+  const bar = $('#steps5');
+  if (bar) paintSteps5(bar, step);
+}
+function paintSteps5(bar, step) {
+  $$('i', bar).forEach((el, i) => { el.className = i === step ? 'is-on' : i < step ? 'is-done' : ''; });
+  bar.lastElementChild.textContent = pad2(step + 1) + ' ' + JOURNEY[step].k;
+}
+function steps5() {
+  const bar = h('div', { class: 'steps5', id: 'steps5', 'aria-hidden': 'true' }, JOURNEY.map(() => h('i')), h('span'));
+  paintSteps5(bar, journeyStep());
+  return bar;
+}
+
+/* ----- the band and its parts ----- */
+const partLists = [];
+function buildParts(ul) {
+  const rows = {};
+  PARTS.forEach(p => {
+    const live = h('span', { class: 'part-live' });
+    const text = h('div', { class: 'part-text', hidden: true }, h('p', { text: p.text }));
+    if (p.id === 'button') text.append(h('button', { class: 'btn alt sm', type: 'button', text: 'Press the button', onclick: pressBandButton }));
+    const btn = h('button', { class: 'part-btn', type: 'button', 'aria-expanded': 'false', onclick: () => pickPart(p.id) },
+      h('span', { class: 'part-n', text: String(p.n) }), h('span', { class: 'part-name', text: p.name }), live, icon('chev', 'part-chev'));
+    const li = h('li', { class: 'part' }, btn, text);
+    ul.append(li);
+    rows[p.id] = { li, btn, live, text };
+  });
+  partLists.push(rows);
+}
+buildParts($('#parts'));
+buildParts($('#partsDesk'));
+
+function setBandOpen(v) {
+  bandOpen = v;
+  $$('#openSeg button').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.open === '1') === v)));
+  if (!v && selectedPart && INTERNAL[selectedPart]) pickPart(selectedPart);   // a part inside cannot stay selected in a closed band
+  if (band) band.setOpen(v);
+}
+function pickPart(id, reveal) {
+  selectedPart = selectedPart === id ? null : id;
+  partLists.forEach(rows => {
+    for (const k in rows) {
+      const on = k === selectedPart;
+      rows[k].li.classList.toggle('is-on', on);
+      rows[k].btn.setAttribute('aria-expanded', String(on));
+      rows[k].text.hidden = !on;
+    }
+    if (reveal && selectedPart && rows[selectedPart].li.offsetParent) rows[selectedPart].li.scrollIntoView({ block: 'nearest', behavior: REDUCE.matches ? 'auto' : 'smooth' });
+  });
+  if (selectedPart && INTERNAL[selectedPart] && !bandOpen) setBandOpen(true);
+  $('#bandView').classList.toggle('is-focus', !!selectedPart);
+  if (band) band.select(selectedPart);
+}
+function pressBandButton() {
+  const f = sim.flow;
+  if (f && !f.choice) { choose('dismiss'); toast('Silenced with the side button.'); }
+  else toast('The button silences an alert. Nothing to silence right now.');
+}
+$$('#openSeg button').forEach(b => b.addEventListener('click', () => setBandOpen(b.dataset.open === '1')));
+function renderPartsLive() {
+  const buzzing = ms() < sim.buzzUntil;
+  partLists.forEach(rows => {
+    rows.light.live.textContent = fmtVal('light', sim.val.light);
+    rows.mic.live.textContent = fmtVal('noise', sim.val.noise);
+    rows.temp.live.textContent = fmtVal('temp', sim.val.temp);
+    rows.motor.live.textContent = buzzing ? 'vibrating' : 'idle';
+    rows.battery.live.textContent = '82%';
+  });
+}
+function buzzBand(btn) {
+  const dur = band ? band.vibrate(profile.vibLevel) : 600;
+  sim.buzzUntil = ms() + dur;
+  try {
+    const tapped = !navigator.userActivation || navigator.userActivation.hasBeenActive;   // browsers refuse to vibrate before a tap
+    if (navigator.vibrate && tapped) navigator.vibrate(profile.vibLevel === 'strong' ? [600] : profile.vibLevel === 'medium' ? [200, 100, 200, 100, 200] : [140, 120, 140]);
+  } catch (err) { /* no vibration on this device */ }
+  if (btn) { btn.classList.remove('is-buzz'); void btn.offsetWidth; btn.classList.add('is-buzz'); }
+}
+
+function isDark() {
+  const m = /^#([0-9a-f]{6})$/i.exec(getComputedStyle(document.documentElement).getPropertyValue('--bg').trim());
+  if (!m) return false;
+  const n = parseInt(m[1], 16);
+  return (n >> 16) * 0.299 + ((n >> 8) & 255) * 0.587 + (n & 255) * 0.114 < 90;
+}
+function noBand() {
+  if (band) return;
+  $('#bandView').classList.add('no-3d');
+  $('#bandFallback').hidden = false;
+}
+function startBand() {
+  if (band || !window.THREE) return;
+  band = Band3D($('#bandView'), {
+    onPick(id) {
+      if (id === 'button' && sim.flow && !sim.flow.choice) { pressBandButton(); return; }
+      pickPart(id, true);
+    }
+  });
+  if (!band) { noBand(); return; }
+  $('#bandView').classList.remove('no-3d');
+  $('#bandFallback').hidden = true;
+  band.theme(isDark());
+  band.setOpen(bandOpen);
+  band.select(selectedPart);
+}
+(function loadBand() {
+  const tag = $('#threejs');
+  if (window.THREE) startBand();
+  else if (tag) {
+    tag.addEventListener('load', startBand);
+    tag.addEventListener('error', noBand);
+    setTimeout(() => { if (!window.THREE) noBand(); }, 9000);
+  } else noBand();
+})();
+const onTheme = () => { if (band) band.theme(isDark()); };
+if (window.MutationObserver) new MutationObserver(onTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+if (darkQuery.addEventListener) darkQuery.addEventListener('change', onTheme);
+
+/* ----- profile ----- */
+const noiseSlider = Slider($('#noiseMax'), { min: 40, max: 100, step: 1, values: [profile.noiseMax], labels: ['Noise limit'], text: v => v + ' dB(A)', onInput: v => { profile.noiseMax = v[0]; saveProfile(); } });
+const lightSlider = Slider($('#lightMax'), { min: 100, max: 20000, log: true, snap: niceLux, values: [profile.lightMax], labels: ['Light limit'], text: v => showLux(v) + ' lux', onInput: v => { profile.lightMax = v[0]; saveProfile(); } });
+const tempSlider = Slider($('#tempRange'), { min: 5, max: 35, step: 1, gap: 2, values: [profile.tempMin, profile.tempMax], labels: ['Lower temperature limit', 'Upper temperature limit'], text: v => v + ' °C', onInput: v => { profile.tempMin = v[0]; profile.tempMax = v[1]; saveProfile(); } });
+const TICKS = {
+  noise: { slider: noiseSlider, marks: [[40, '40', 'library'], [60, '60', 'talking'], [80, '80', 'busy street'], [100, '100', '']] },
+  light: { slider: lightSlider, marks: [[100, '100', 'living room'], [500, '500', 'office'], [2000, '2k', 'by a window'], [20000, '20k', 'daylight']] },
+  temp: { slider: tempSlider, marks: [[5, '5', ''], [15, '15', ''], [25, '25', ''], [35, '35', '']] }
+};
+$$('[data-ticks]').forEach(box => {
+  const T = TICKS[box.dataset.ticks];
+  T.marks.forEach((mk, i) => {
+    const el = h('span', { class: i === 0 ? 'is-first' : i === T.marks.length - 1 ? 'is-last' : '' }, mk[1]);
+    if (mk[2]) el.append(h('br'), mk[2]);
+    el.style.left = (T.slider.pos(mk[0]) * 100) + '%';
+    box.append(el);
+  });
+});
+const OFFERS = [
+  ['move', 'Move somewhere calmer', 'A quieter spot, softer light or a better temperature'],
+  ['pause', 'Take a short break', 'Five minutes away, with alerts paused'],
+  ['aid', 'Use something of my own', 'Earplugs, sunglasses or a layer']
+];
+OFFERS.forEach(o => $('#offerList').append(
+  h('button', { class: 'check', type: 'button', role: 'checkbox', 'aria-checked': 'false', 'data-offer': o[0], onclick: () => { profile.offer[o[0]] = !profile.offer[o[0]]; saveProfile(); } },
+    h('span', { class: 'box' }, icon('check')), h('span', null, o[1], h('small', { text: o[2] })))
+));
+$('#offerList').append(h('div', { class: 'check', role: 'checkbox', 'aria-checked': 'true', 'aria-disabled': 'true' },
+  h('span', { class: 'box' }, icon('check')), h('span', null, 'Continue without help', h('small', { text: 'Always offered' }))));
+
+function renderProfile() {
+  const p = profile;
+  $('#noiseMaxOut').textContent = p.noiseMax;
+  $('#lightMaxOut').textContent = showLux(p.lightMax);
+  $('#tempOut').textContent = p.tempMin + ' to ' + p.tempMax;
+  noiseSlider.set([p.noiseMax]);
+  lightSlider.set([p.lightMax]);
+  tempSlider.set([p.tempMin, p.tempMax]);
+  $$('[data-watch]').forEach(b => {
+    const on = p.watch[b.dataset.watch];
+    b.setAttribute('aria-checked', String(on));
+    b.closest('.group').classList.toggle('is-off', !on);
+  });
+  $$('[data-set]').forEach(b => b.setAttribute('aria-checked', String(p[b.dataset.set])));
+  $('#vibRow').hidden = !p.vib;
+  $$('#vibSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === p.vibLevel)));
+  $$('#waitSeg button').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.v === p.wait)));
+  $$('[data-offer]').forEach(b => b.setAttribute('aria-checked', String(p.offer[b.dataset.offer])));
+}
+$$('[data-watch]').forEach(b => b.addEventListener('click', () => { const m = b.dataset.watch; profile.watch[m] = !profile.watch[m]; saveProfile(); }));
+$$('[data-set]').forEach(b => b.addEventListener('click', () => { const k = b.dataset.set; profile[k] = !profile[k]; saveProfile(); }));
+$$('#vibSeg button').forEach(b => b.addEventListener('click', () => { profile.vibLevel = b.dataset.v; saveProfile(); }));
+$$('#waitSeg button').forEach(b => b.addEventListener('click', () => { profile.wait = +b.dataset.v; saveProfile(); }));
+$('#vibTry').addEventListener('click', e => buzzBand(e.currentTarget));
+$('#resetBtn').addEventListener('click', () => { resetDemo(); toast('The demo is back to its starting point.'); });
+
+/* ----- today ----- */
+const dayChart = DayChart($('#dayChart'), $('#dayRead'));
+let dayView = 'chart';
+function renderLog() {
+  const items = log.slice().sort((a, b) => b.t - a.t).map(a => {
+    const limit = (a.metric === 'temp' ? (a.kind === 'warm' ? 'max ' : 'min ') : 'limit ') + (a.metric === 'light' ? showLux(a.limit) : a.limit);
+    const fb = a.feedback === 'useful' ? h('span', { class: 'chip good' }, icon('check'), 'Useful')
+      : a.feedback === 'not' ? h('span', { class: 'chip plain', text: 'Not useful' })
+      : a.choice === 'snooze' || a.choice === 'dismiss' ? null : h('span', { class: 'chip plain', text: 'No answer' });
+    return h('li', { class: 'log-item' },
+      h('span', { class: 'log-time', text: clock(a.t) }),
+      h('div', { class: 'log-main' },
+        h('p', { class: 'log-what' }, h('b', { text: METRICS[a.metric].name + ' ' + fmtVal(a.metric, a.value) }), h('span', { text: ' · ' + limit + ' · ' + placeOf(a.place).name })),
+        h('p', { class: 'log-did' }, h('span', { text: choicePast(a.choice, a.metric, a.kind) }), fb)));
+  });
+  const box = $('#log');
+  box.replaceChildren();
+  if (items.length) items.forEach(li => box.append(li));
+  else box.append(h('li', { class: 'footnote', text: 'No alerts so far.' }));
+}
+function renderToday() {
+  if (tab !== 'today') return;
+  const st = dayStats();
+  $('#tiles').replaceChildren(
+    h('div', { class: 'tile' }, h('b', { text: st.within + '%' }), h('span', { text: 'of today within your limits' })),
+    h('div', { class: 'tile' }, h('b', { text: String(st.alerts) }), h('span', { text: st.alerts === 1 ? 'alert sent' : 'alerts sent' })),
+    h('div', { class: 'tile' }, h('b', { text: st.useful + ' of ' + st.rated }), h('span', { text: 'rated alerts were useful' })));
+  $('#dayChart').hidden = dayView !== 'chart';
+  $('#dayTableWrap').hidden = dayView !== 'table';
+  if (dayView === 'chart') dayChart.render(); else renderDayTable($('#dayTable'));
+  renderLog();
+}
+$$('#daySeg button').forEach(b => b.addEventListener('click', () => {
+  dayView = b.dataset.v;
+  $$('#daySeg button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  renderToday();
+}));
+
+/* ----- the sheet: an alert and what follows, or the note about this demo ----- */
+const sheetLayer = $('#sheetLayer'), sheetBody = $('#sheetBody');
+let sheetKind = null, sheetKey = '', lastFocus = null;
+function openSheet(kind) {
+  if (!sheetKind) lastFocus = document.activeElement;
+  sheetKind = kind;
+  sheetLayer.hidden = false;
+}
+function closeSheet() {
+  sheetKind = null; sheetKey = '';
+  sheetLayer.hidden = true;
+  sheetBody.replaceChildren();
+  if (lastFocus && lastFocus.isConnected && lastFocus.focus) { try { lastFocus.focus({ preventScroll: true }); } catch (err) { /* nothing to restore */ } }
+  lastFocus = null;
+}
+function fillSheet(nodes) {
+  sheetBody.replaceChildren();
+  nodes.forEach(n => { if (n) sheetBody.append(n); });
+  sheetBody.scrollTop = 0;
+  const title = $('#sheetTitle');
+  if (title) { try { title.focus({ preventScroll: true }); } catch (err) { /* focus is a nicety */ } }
+}
+function userClose() {
+  const f = sim.flow;
+  if (sheetKind === 'flow' && f) {
+    if (f.stage === 'feedback') giveFeedback(null);
+    else if (f.stage === 'learn') learn('keep');
+    else { choose('dismiss'); toast('Alert silenced.'); }
+  } else closeSheet();
+}
+$('#sheetClose').addEventListener('click', userClose);
+sheetLayer.addEventListener('click', e => { if (e.target === sheetLayer) userClose(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && sheetKind) userClose(); });
+
+function alertDetail(f) {
+  const head = fmtVal(f.metric, f.value) + ' for the last ' + profile.wait + NB + 'seconds. ';
+  if (f.metric === 'noise') return head + 'Your limit is ' + f.limit + NB + 'dB(A).';
+  if (f.metric === 'light') return head + 'Your limit is ' + showLux(f.limit) + NB + 'lx.';
+  return head + (f.kind === 'warm' ? 'Your range ends at ' : 'Your range starts at ') + f.limit + NB + '°C.';
+}
+function renderFlowSheet() {
+  const f = sim.flow;
+  if (!f) { if (sheetKind === 'flow') closeSheet(); return; }
+  const key = f.id + ':' + (f.stage === 'notify' ? 'choice' : f.stage);
+  if (sheetKind === 'flow' && sheetKey === key) return;
+  openSheet('flow');
+  sheetKey = key;
+  const titleEl = text => h('h2', { class: 'sheet-title', id: 'sheetTitle', tabindex: '-1', text });
+
+  if (f.stage === 'notify' || f.stage === 'choice') {
+    const level = profile.vibLevel.charAt(0).toUpperCase() + profile.vibLevel.slice(1);
+    const offered = ['move', 'pause', 'aid'].filter(c => profile.offer[c]).concat('continue');
+    fillSheet([
+      steps5(),
+      h('p', { class: 'vibline' + (profile.vib ? ' is-buzz' : '') }, icon('vib'), h('span', { text: profile.vib ? level + ' vibration on your band' : 'Phone alert · band vibration is off' })),
+      titleEl(alertTitle(f.metric, f.kind)),
+      h('p', { class: 'sheet-detail', text: alertDetail(f) }),
+      h('div', { class: 'opts' }, offered.map(c =>
+        h('button', { class: 'opt' + (c === 'continue' ? ' is-plain' : ''), type: 'button', onclick: () => choose(c) }, icon(CHOICE_ICON[c]), h('span', { text: choiceLabel(c, f.metric, f.kind) }), icon('chev')))),
+      h('button', { class: 'linkbtn mid', type: 'button', text: 'Pause alerts for 30 minutes', onclick: () => { choose('snooze'); toast('Alerts are paused for 30 minutes.'); } }),
+      h('p', { class: 'footnote', text: 'On the band, one press of the side button silences this.' })
+    ]);
+  } else if (f.stage === 'feedback') {
+    const after = f.choice === 'move' ? 'The band keeps measuring where you are now.'
+      : f.choice === 'pause' ? 'Alerts are paused for five minutes. The band keeps measuring.'
+      : 'No more alerts about this until it settles and rises again.';
+    fillSheet([
+      steps5(),
+      h('p', { class: 'done-line' }, icon('check'), h('span', { text: choiceLabel(f.choice, f.metric, f.kind) })),
+      titleEl('Was this alert useful?'),
+      h('p', { class: 'sheet-text', text: after }),
+      h('div', { class: 'btn-row' },
+        h('button', { class: 'btn', type: 'button', text: 'Yes, useful', onclick: () => { giveFeedback('useful'); toast('Thanks. Your settings stay as they are.'); } }),
+        h('button', { class: 'btn alt', type: 'button', text: 'Not really', onclick: () => { giveFeedback('not'); if (!sim.flow) toast('Thanks. Noted.'); } })),
+      h('button', { class: 'linkbtn mid', type: 'button', text: 'Skip', onclick: () => giveFeedback(null) })
+    ]);
+  } else {
+    fillSheet([
+      steps5(),
+      titleEl('Thanks. Change anything?'),
+      h('p', { class: 'sheet-text', text: 'SENSE only changes your profile when you say so.' }),
+      h('div', { class: 'opts' },
+        learnOptions(f).map(o => h('button', { class: 'opt', type: 'button', onclick: () => { const done = learn(o.id); toast('Saved. ' + (done || '')); } }, icon(o.id === 'raise' ? 'profile' : 'clock'), h('span', { text: o.label }), icon('chev'))),
+        h('button', { class: 'opt is-plain', type: 'button', onclick: () => { learn('keep'); toast('Your settings stay as they are.'); } }, icon('check'), h('span', { text: 'Keep my settings' }), icon('chev')))
+    ]);
+  }
+}
+function openAbout() {
+  if (sim.flow) return;
+  openSheet('about');
+  sheetKey = 'about';
+  const fact = (bold, rest) => h('li', null, icon('check'), h('span', null, h('b', { text: bold }), ' ' + rest));
+  fillSheet([
+    h('p', { class: 'eyebrow', text: 'Concept demo' }),
+    h('h2', { class: 'sheet-title', id: 'sheetTitle', tabindex: '-1', text: 'About this demo' }),
+    h('p', { class: 'sheet-text', text: 'SENSE is a concept for a discreet wristband and a phone app. The band measures noise, light and temperature. The app compares the readings with limits you set yourself and, if you want, tells you when one is crossed.' }),
+    h('ul', { class: 'facts' },
+      fact('You stay in control.', 'You set the limits, choose how to be told and can silence an alert at any time.'),
+      fact('It flags the room, not the person.', 'SENSE does not diagnose and does not guess how you feel.'),
+      fact('Privacy first.', 'Only the loudness level is kept, never audio. Readings are not shared with employers or anyone else.')),
+    h('p', { class: 'sheet-text', text: 'To see an alert, choose Train station as the place and wait five seconds.' }),
+    h('p', { class: 'footnote', text: 'Working concept for discussion, not a validated product. Every reading, the band and the sample day are simulated.' }),
+    h('button', { class: 'btn wide', type: 'button', text: 'Got it', onclick: closeSheet })
+  ]);
+}
+$$('[data-about]').forEach(b => b.addEventListener('click', openAbout));
+
+/* ----- keep everything in step with the simulation ----- */
+function renderClock() {
+  const c = clock(simMinute());
+  $('#sbClock').textContent = c;
+  $('#heroClock').textContent = c;
+}
+bus.on('tick', () => { renderCards(); renderHero(); renderJourney(); renderPartsLive(); });
+bus.on('second', () => { METRIC_IDS.forEach(m => cardRefs[m].spark.draw()); renderClock(); });
+bus.on('room', renderRoom);
+bus.on('alert', () => { if (profile.vib) buzzBand(); });
+bus.on('state', () => { renderFlowSheet(); renderHero(); renderJourney(); renderCards(); });
+bus.on('profile', () => { renderProfile(); METRIC_IDS.forEach(m => cardRefs[m].spark.draw()); renderCards(); renderHero(); renderToday(); });
+bus.on('log', renderToday);
+bus.on('minute', renderToday);
+
+renderRoom(); renderProfile(); renderCards(); renderHero(); renderJourney(); renderPartsLive(); renderClock();
+METRIC_IDS.forEach(m => cardRefs[m].spark.draw());
+setInterval(tickSim, 250);
+})();
+</script>
+</body>
+</html>
